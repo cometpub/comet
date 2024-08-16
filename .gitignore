@@ -1,0 +1,23 @@
+/pb_data/
+test_pb_data/logs.*
+test_pb_data/types.d.ts
+__*
+
+/.vscode/
+.idea
+
+.DS_Store
+
+# goreleaser builds folder
+/.builds/
+
+# tests coverage
+coverage.out
+
+# plaintask todo files
+*.todo
+
+# generated markdown previews
+README.html
+CHANGELOG.html
+LICENSE.html

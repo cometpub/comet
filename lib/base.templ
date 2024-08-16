@@ -1,0 +1,25 @@
+package lib
+
+type SEO struct {
+	Title       string
+	Description string
+	Image       string
+}
+
+templ BaseLayout(seo SEO) {
+	<html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+			<meta name="viewport" content="width=device-width"/>
+			<script src="/static/vendor/htmx.min.js"></script>
+			<title>{ seo.Title } • Comet</title>
+			<meta name="description" content={ seo.Description }/>
+		</head>
+		<body>
+			<main>
+				{ children... }
+			</main>
+		</body>
+	</html>
+}

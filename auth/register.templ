@@ -1,0 +1,65 @@
+package auth
+
+import "github.com/cometpub/comet/lib"
+
+templ Register(form RegisterFormValue, err lib.RegisterError) {
+	@lib.BaseLayout(lib.SEO{Title: "Sign up", Description: ""}) {
+		@RegisterForm(form, err)
+		<footer>
+			<p>Already have an account?</p>
+			<a href="/auth/login">login</a>
+		</footer>
+	}
+}
+
+templ RegisterForm(form RegisterFormValue, err lib.RegisterError) {
+	<form method="POST" action="/auth/register" hx-boost="true">
+		<fieldset>
+			<label>Username</label>
+			<input
+				type="text"
+				name="username"
+				id="username"
+				value={ form.username }
+				if err.Username != "" {
+					aria-invalid="true"
+				}
+			/>
+			if err.Username != "" {
+				<small>{ err.Username }</small>
+			}
+		</fieldset>
+		<fieldset>
+			<label>Password</label>
+			<input
+				type="password"
+				name="password"
+				id="password"
+				if err.Password != "" {
+					aria-invalid="true"
+				}
+			/>
+			if err.Password != "" {
+				<small>{ err.Password }</small>
+			}
+		</fieldset>
+		<fieldset>
+			<label>Repeat password</label>
+			<input
+				type="password"
+				name="passwordRepeat"
+				id="passwordRepeat"
+				if err.PasswordRepeat != "" {
+					aria-invalid="true"
+				}
+			/>
+			if err.PasswordRepeat != "" {
+				<small>{ err.PasswordRepeat }</small>
+			}
+		</fieldset>
+		if err.Unknown != "" {
+			<p>{ err.Unknown }</p>
+		}
+		<button type="submit">Register</button>
+	</form>
+}
