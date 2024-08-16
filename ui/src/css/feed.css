@@ -21,16 +21,28 @@
   }
 
   nav[aria-label="Pagination"] {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto;
+    grid-template-areas: "first previous . next last";
     gap: var(--space-s);
     width: 100%;
     max-width: 50ch;
     margin-inline: auto;
 
+    & a[rel="first"] {
+      grid-area: first;
+    }
+
+    & a[rel="previous"] {
+      grid-area: previous;
+    }
+
     & a[rel="next"] {
-      margin-inline-start: auto;
+      grid-area: next;
+    }
+
+    & a[rel="last"] {
+      grid-area: last;
     }
   }
 

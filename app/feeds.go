@@ -9,8 +9,35 @@ import (
 	"github.com/cometpub/comet/middleware"
 	"github.com/cometpub/comet/publications"
 	"github.com/labstack/echo/v5"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/models"
 )
+
+func RegisterFeedRoutes(app core.App, group *echo.Group) {
+	group.Use(
+		middleware.LoadPublicationFromRequest(app),
+		middleware.RequirePublication(app),
+		middleware.LoadPublicationEntriesFromRequest(app),
+	)
+
+	// main routes for Atom feeds
+	group.GET("/feed", AtomFeedGet)
+	group.GET("/feed/:page", AtomFeedGet)
+
+	// handle routes for /articles, /notes, /photos, and /bookmarks
+	group.GET("/:type", AtomFeedGet)
+	group.GET("/:type/:page", AtomFeedGet)
+
+	// handle feeds for category tags
+	group.GET("/category/:category", AtomFeedGet)
+	group.GET("/category/:category/:page", AtomFeedGet)
+
+	// handle archive routes by date
+	group.GET("/:year", AtomFeedGet)
+	group.GET("/:year/:month", AtomFeedGet)
+	group.GET("/:year/:month/:day", AtomFeedGet)
+	group.GET("/:year/:month/:day/:slug", AtomFeedGet)
+}
 
 func XMLWithXSLT(xml string, xslt string) string {
 	re := regexp.MustCompile(`^<\?xml ([^)]+)\?>`)

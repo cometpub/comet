@@ -25,14 +25,24 @@ func TemporaryRedirect(to string) echo.HandlerFunc {
 	}
 }
 
-func InitAppRoutes(e *core.ServeEvent, app core.App) {
-	appGroup := e.Router.Group("/app", middleware.LoadAuthContextFromCookie(app), middleware.RequireUserAuth)
+func resolveIndex(c echo.Context) error {
+	publication := c.Get(middleware.ContextPublication)
 
+	if publication != nil {
+		return TemporaryRedirect("/feed")(c)
+	} else {
+		return ToDo(c)
+	}
+}
+
+func InitAppRoutes(e *core.ServeEvent, app core.App) {
+	// placeholder for the admin dashboard app
+	appGroup := e.Router.Group("/app", middleware.LoadAuthContextFromCookie(app), middleware.RequireUserAuth)
 	appGroup.GET("", ToDo)
 
-	publicationGroup := e.Router.Group("", middleware.LoadPublicationFromRequest(app), middleware.LoadPublicationEntriesFromRequest(app))
-	publicationGroup.GET("/feed", PermanentRedirect("/atom.xml"))
-	publicationGroup.GET("/atom.xml", AtomFeedGet)
-	publicationGroup.GET("/feed.json", JsonFeedGet)
-	publicationGroup.GET("/rss.xml", RSSFeedGet)
+	// distinguish between root requests for the Comet home page and publications redirected from the reverse proxy
+	e.Router.GET("", resolveIndex, middleware.LoadPublicationFromRequest(app))
+
+	feedGroup := e.Router.Group("")
+	RegisterFeedRoutes(app, feedGroup)
 }

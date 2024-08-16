@@ -41,6 +41,16 @@
                         </xsl:for-each>
                         
                     </ol>
+                    <xsl:if test="atom:feed/atom:link[@rel='previous'] or atom:feed/atom:link[@rel='next']">
+                        <footer>
+                            <nav aria-label="Pagination">
+                                <xsl:apply-templates select="atom:feed/atom:link[@rel='first']"/>
+                                <xsl:apply-templates select="atom:feed/atom:link[@rel='previous']"/>
+                                <xsl:apply-templates select="atom:feed/atom:link[@rel='next']"/>
+                                <xsl:apply-templates select="atom:feed/atom:link[@rel='last']"/>
+                            </nav>
+                        </footer>
+                    </xsl:if>
                 </main>
             </body>
         </html>
@@ -70,5 +80,41 @@
             <span class="sr-only">Posts tagged</span>
             <xsl:value-of select="@label" />
         </h2>
+    </xsl:template>
+    
+    <xsl:template match="atom:feed/atom:link[@rel='previous']">
+        <a rel="previous">
+            <xsl:attribute name="href">
+                <xsl:value-of select="@href" />
+            </xsl:attribute>
+            Previous
+        </a>
+    </xsl:template>
+    
+    <xsl:template match="atom:feed/atom:link[@rel='next']">
+        <a rel="next">
+            <xsl:attribute name="href">
+                <xsl:value-of select="@href" />
+            </xsl:attribute>
+            Next
+        </a>
+    </xsl:template>
+    
+    <xsl:template match="atom:feed/atom:link[@rel='first']">
+        <a rel="first">
+            <xsl:attribute name="href">
+                <xsl:value-of select="@href" />
+            </xsl:attribute>
+            First
+        </a>
+    </xsl:template>
+    
+    <xsl:template match="atom:feed/atom:link[@rel='last']">
+        <a rel="last">
+            <xsl:attribute name="href">
+                <xsl:value-of select="@href" />
+            </xsl:attribute>
+            Last
+        </a>
     </xsl:template>
 </xsl:stylesheet>

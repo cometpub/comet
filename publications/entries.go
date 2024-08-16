@@ -122,9 +122,10 @@ func EntryToFeedItem(domain string, record *models.Record) *feeds.Item {
 	}
 
 	for _, author := range record.ExpandedAll("authors") {
+		icon, _ := url.JoinPath(domain, RecordPropToImageSrcThumbnail(author, "avatar", "100x100"))
 		entry.Authors = append(entry.Authors, &feeds.Person{
 			Name:     author.GetString("name"),
-			Icon:     RecordPropToImageSrcThumbnail(author, "avatar", "100x100"),
+			Icon:     icon,
 			Username: author.GetString("username"),
 		})
 	}
