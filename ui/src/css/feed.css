@@ -1,0 +1,48 @@
+@layer base, components, utilities, view;
+@import url(./base/reset.css) layer(base.reset);
+@import url(./base/prose.css) layer(base.prose);
+@import url(./base/theme.css) layer(base.theme);
+@import url(./components/components.css) layer(components);
+@import url(./components/editor.css) layer(components);
+@import url(./fonts/icons.css) layer(components);
+@import url(./utils/utilities.css) layer(utilities);
+@import url(./components/cards.css) layer(view);
+
+@layer view {
+  ol:has(.h-entry) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s-m);
+    margin-inline: auto;
+  }
+
+  h2.p-summary {
+    text-align: center;
+  }
+
+  nav[aria-label="Pagination"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    width: 100%;
+    max-width: 50ch;
+    margin-inline: auto;
+
+    & a[rel="next"] {
+      margin-inline-start: auto;
+    }
+  }
+
+  form[action="/publish"] {
+    padding: var(--space-s-m);
+    border-radius: 0.5em;
+    background-color: var(--surface-2);
+    width: 100%;
+    max-width: 50ch;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+}

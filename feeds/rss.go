@@ -71,7 +71,7 @@ type RssItem struct {
 	Description string   `xml:"description"` // required
 	Content     *RssContent
 	Authors     []string `xml:"author,omitempty"`
-	Category    string   `xml:"category,omitempty"`
+	Categories  []string `xml:"category,omitempty"`
 	Comments    string   `xml:"comments,omitempty"`
 	Enclosures  []*RssEnclosure
 	Guid        *RssGuid // Id used
@@ -104,6 +104,7 @@ func newRssItem(i *Item) *RssItem {
 		Title:       i.Title,
 		Description: i.Description,
 		PubDate:     i.Updated.Format(time.RFC1123Z),
+		Categories:  i.Categories,
 	}
 	if i.Id != "" {
 		item.Guid = &RssGuid{Id: i.Id, IsPermaLink: i.IsPermaLink}

@@ -1,0 +1,31 @@
+ul[data-type="taskList"] {
+  list-style: none;
+  padding-inline-start: 0;
+
+  & li {
+    align-items: flex-start;
+    display: flex;
+    gap: var(--space-xs);
+
+    & > label {
+      flex: 0 0 auto;
+      user-select: none;
+    }
+
+    & > div {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+.tiptap ul.tight {
+  padding-inline-start: 0;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: var(--text-secondary);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

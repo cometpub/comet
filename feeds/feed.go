@@ -37,6 +37,7 @@ type Item struct {
 	Published   time.Time
 	Enclosures  []*Enclosure
 	Content     string
+	Categories  []string
 }
 
 type Feed struct {
@@ -50,6 +51,7 @@ type Feed struct {
 	Subtitle    string
 	Items       []*Item
 	Copyright   string
+	Icon        *Image
 	Image       *Image
 }
 

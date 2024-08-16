@@ -118,12 +118,13 @@ func newAtomEntry(i *Item) *AtomEntry {
 	}
 
 	x := &AtomEntry{
-		Title:     i.Title,
-		Links:     []AtomLink{{Href: link.Href, Rel: link_rel, Type: link.Type}},
-		Id:        id,
-		Authors:   authors,
-		Updated:   i.Updated.Format(time.RFC3339),
-		Published: i.Published.Format(time.RFC3339),
+		Title:      i.Title,
+		Links:      []AtomLink{{Href: link.Href, Rel: link_rel, Type: link.Type}},
+		Id:         id,
+		Authors:    authors,
+		Updated:    i.Updated.Format(time.RFC3339),
+		Published:  i.Published.Format(time.RFC3339),
+		Categories: i.Categories,
 	}
 
 	// if there's a description, assume it's html
@@ -154,8 +155,10 @@ func (a *Atom) AtomFeed() *AtomFeed {
 		Xmlns:      ns,
 		XmlnsComet: nsComet,
 		Title:      a.Title,
-		Links:      links,
 		Subtitle:   a.Description,
+		Icon:       a.Icon.Url,
+		Logo:       a.Image.Url,
+		Links:      links,
 		Id:         a.Id,
 		Updated:    updated,
 		Rights:     a.Copyright,

@@ -1,0 +1,88 @@
+a[rel~="category"] {
+  --font-size: var(--font-size-s);
+  font-weight: 700;
+}
+
+ul:has(a[rel~="category"]) {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.h-entry:not(:has(.p-content)) {
+  background-color: var(--surface-2);
+  max-width: 50ch;
+  width: 100%;
+  border-radius: 0.33em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  padding: var(--space-s);
+
+  & .p-author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+
+    & .u-logo {
+      border-radius: 9999px;
+      height: var(--space-xl);
+      width: var(--space-xl);
+      object-fit: cover;
+    }
+  }
+
+  & .p-author {
+    & + * {
+      margin-inline-start: auto;
+    }
+
+    & .p-name {
+      font-size: var(--font-size-m);
+    }
+  }
+
+  & .p-name {
+    font-size: var(--font-size-xl);
+  }
+
+  & :where(header, footer) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+}
+
+.h-entry:has(.p-content) {
+  & header {
+    display: grid;
+    gap: var(--space-s);
+    align-items: center;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "name name" "published categories";
+
+    & .p-name {
+      grid-area: name;
+    }
+
+    & .dt-published {
+      grid-area: published;
+    }
+
+    & ul:has([rel~="category"]) {
+      grid-area: categories;
+    }
+  }
+
+  & footer {
+    & .u-url {
+      margin-inline-end: -0.67em;
+    }
+  }
+
+  & .p-summary {
+    margin-block: var(--space-m);
+    font-size: var(--font-size-l);
+  }
+}

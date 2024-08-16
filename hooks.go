@@ -12,14 +12,14 @@ import (
 )
 
 //go:embed all:static
-var publicDir embed.FS
+var staticDir embed.FS
 
-// PublicDirFS contains the embedded dist directory files (without the "public" prefix)
-var PublicDirFS = echo.MustSubFS(publicDir, "public")
+// StaticDirFS contains the embedded dist directory files (without the "static" prefix)
+var StaticDirFS = echo.MustSubFS(staticDir, "static")
 
 func bindAppHooks(pb core.App) {
 	pb.OnBeforeServe().Add(func(e *core.ServeEvent) error {
-		e.Router.GET("/static/*", apis.StaticDirectoryHandler(PublicDirFS, false))
+		e.Router.GET("/static/*", apis.StaticDirectoryHandler(StaticDirFS, false))
 
 		authGroup := e.Router.Group("/auth", middleware.LoadAuthContextFromCookie(pb))
 		auth.RegisterLoginRoutes(pb, *authGroup)

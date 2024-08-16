@@ -78,8 +78,6 @@ func PublicationToFeed(record *models.Record, entries []*models.Record, paginati
 		links = append(links, &feeds.Link{Href: pagination.Next, Rel: "next"})
 	}
 
-	logo, _ := url.JoinPath(domain, record.GetString("logo"))
-
 	feed := &feeds.Feed{
 		Title:     record.GetString("title"),
 		Links:     links,
@@ -87,7 +85,8 @@ func PublicationToFeed(record *models.Record, entries []*models.Record, paginati
 		Id:        pagination.Self,
 		Updated:   record.Updated.Time(),
 		Published: record.GetDateTime("published").Time(),
-		Image:     &feeds.Image{Url: logo},
+		Icon:      &feeds.Image{Url: RecordPropToImageSrcThumbnail(record, "icon", "100x100")},
+		Image:     &feeds.Image{Url: RecordPropToImageSrc(record, "logo")},
 	}
 
 	for _, author := range record.ExpandedAll("authors") {

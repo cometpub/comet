@@ -116,33 +116,35 @@ func EntryToFeedItem(domain string, record *models.Record) *feeds.Item {
 	}
 
 	for _, photo := range record.GetStringSlice("photos") {
-		mimetype := mime.TypeByExtension(filepath.Ext(photo))
-		entry.Enclosures = append(entry.Enclosures, &feeds.Enclosure{Url: photo, Type: mimetype})
+		url := RecordValueToImageSrc(record, photo)
+		mimetype := mime.TypeByExtension(filepath.Ext(url))
+		entry.Enclosures = append(entry.Enclosures, &feeds.Enclosure{Url: url, Type: mimetype})
 	}
 
 	for _, author := range record.ExpandedAll("authors") {
-		icon, _ := url.JoinPath(domain, author.GetString("avatar"))
 		entry.Authors = append(entry.Authors, &feeds.Person{
 			Name:     author.GetString("name"),
-			Icon:     icon,
+			Icon:     RecordPropToImageSrcThumbnail(author, "avatar", "100x100"),
 			Username: author.GetString("username"),
 		})
 	}
 
-	//for _, category := range record.ExpandedAll("categories") {
-	//	entry.Categories = append(entry.Categories, category.GetString("slug"))
-	//}
+	for _, category := range record.ExpandedAll("categories") {
+		entry.Categories = append(entry.Categories, category.GetString("slug"))
+	}
 
-	switch record.GetString("type") {
-	case "article":
+	entryType := record.GetString("type")
+
+	switch entryType {
+	case ArticleType:
 		entry.Title = record.GetString("name")
 		entry.Description = lib.MarkdownToHTML(record.GetString("summary"))
 		entry.Content = lib.MarkdownToHTML(record.GetString("content"))
-	case "note":
-	case "bookmark":
-		// TODO: bookmarkOf URL
+	case NoteType:
 		entry.Description = lib.MarkdownToHTML(record.GetString("summary"))
-	case "photo":
+	case BookmarkType:
+		entry.Description = lib.MarkdownToHTML(record.GetString("summary"))
+	case PhotoType:
 		entry.Description = lib.MarkdownToHTML(record.GetString("content"))
 	}
 

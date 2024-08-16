@@ -1,0 +1,99 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  background-color: var(--surface-2);
+  color: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+  display: block;
+}
+
+blockquote {
+  border-inline-start: 0.25rem solid var(--text-accent);
+  padding: var(--space-s);
+  padding-inline-end: 0;
+
+  & > p {
+    display: initial;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+}
+
+hr {
+  border-color: var(--surface-3);
+  margin-block: var(--space-m-l);
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+:where(ul, ol, dl)[role="list"] {
+  margin: 0;
+  padding: 0;
+
+  & > li {
+    list-style: none;
+  }
+}
+
+ul {
+  list-style-position: inside;
+  list-style-type: disc;
+
+  & > li > p:first-child {
+    display: initial;
+  }
+}
+
+li:has(> p:first-child > input[type="checkbox"]:first-child) {
+  list-style: none;
+}

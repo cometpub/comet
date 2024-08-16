@@ -17,6 +17,16 @@ func RecordValueToImageSrc(record *models.Record, value string) string {
 	return src
 }
 
+func RecordValueToImageSrcThumbnail(record *models.Record, value string, thumbnailSize string) string {
+	src := RecordValueToImageSrc(record, value)
+
+	if value == "" {
+		return value
+	}
+
+	return fmt.Sprintf("%s?thumb=%s", src, thumbnailSize)
+}
+
 func RecordPropToImageSrc(record *models.Record, key string) string {
 	value := record.GetString(key)
 
