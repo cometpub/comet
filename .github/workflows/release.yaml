@@ -1,8 +1,11 @@
-name: basebuild
+name: goreleaser
 
 on:
   pull_request:
   push:
+
+permissions:
+  contents: write
 
 jobs:
   goreleaser:
