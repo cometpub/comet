@@ -11,6 +11,7 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/models"
+	accept "github.com/timewasted/go-accept-headers"
 )
 
 func RegisterFeedRoutes(app core.App, group *echo.Group) {
@@ -21,28 +22,42 @@ func RegisterFeedRoutes(app core.App, group *echo.Group) {
 	)
 
 	// main routes for Atom feeds
-	group.GET("/feed", AtomFeedGet)
-	group.GET("/feed/:page", AtomFeedGet)
+	group.GET("/feed", FeedGetByAccepts)
+	group.GET("/feed/:page", FeedGetByAccepts)
 
 	// handle routes for /articles, /notes, /photos, and /bookmarks
-	group.GET("/:type", AtomFeedGet)
-	group.GET("/:type/:page", AtomFeedGet)
+	group.GET("/:type", FeedGetByAccepts)
+	group.GET("/:type/:page", FeedGetByAccepts)
 
 	// handle feeds for category tags
-	group.GET("/category/:category", AtomFeedGet)
-	group.GET("/category/:category/:page", AtomFeedGet)
+	group.GET("/category/:category", FeedGetByAccepts)
+	group.GET("/category/:category/:page", FeedGetByAccepts)
 
 	// handle archive routes by date
-	group.GET("/:year", AtomFeedGet)
-	group.GET("/:year/:month", AtomFeedGet)
-	group.GET("/:year/:month/:day", AtomFeedGet)
-	group.GET("/:year/:month/:day/:slug", AtomFeedGet)
+	group.GET("/:year", FeedGetByAccepts)
+	group.GET("/:year/:month", FeedGetByAccepts)
+	group.GET("/:year/:month/:day", FeedGetByAccepts)
+	group.GET("/:year/:month/:day/:slug", FeedGetByAccepts)
 }
 
 func XMLWithXSLT(xml string, xslt string) string {
 	re := regexp.MustCompile(`^<\?xml ([^)]+)\?>`)
 	str := re.ReplaceAllString(xml, fmt.Sprintf(`<?xml-stylesheet href="%s" type="text/xsl"?>`, xslt))
 	return str
+}
+
+func FeedGetByAccepts(c echo.Context) error {
+	header := c.Request().Header.Get(echo.HeaderAccept)
+
+	types := accept.Parse(header)
+
+	if types.Accepts("application/rss+xml") {
+		return RSSFeedGet(c)
+	} else if types.Accepts("application/feed+json") || types.Accepts("application/json") {
+		return JsonFeedGet(c)
+	} else {
+		return AtomFeedGet(c)
+	}
 }
 
 func AtomFeedGet(c echo.Context) error {
