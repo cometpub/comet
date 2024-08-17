@@ -11,6 +11,7 @@ import (
 
 const HostHeader = "X-Forwarded-Host"
 const ContextPublication = "publication"
+const ContextHostBase = "host_base"
 
 func LoadPublicationFromRequest(app core.App) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -27,8 +28,11 @@ func LoadPublicationFromRequest(app core.App) echo.MiddlewareFunc {
 				}
 			}
 
+			hostBase := httpHost
+
 			// TEMP
 			if httpHost == "127.0.0.1:8090" || httpHost == "localhost:8090" {
+				hostBase = "http://" + hostBase
 				httpHost = "comet.tonysull.co"
 			}
 
@@ -40,6 +44,7 @@ func LoadPublicationFromRequest(app core.App) echo.MiddlewareFunc {
 			}
 
 			c.Set(ContextPublication, publication)
+			c.Set(ContextHostBase, hostBase)
 
 			return next(c)
 		}

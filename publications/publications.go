@@ -61,7 +61,7 @@ func FindEntriesCountForDomain(app core.App, domain string, entryType EntryType,
 	return count, nil
 }
 
-func PublicationToFeed(record *models.Record, entries []*models.Record, pagination *feeds.FeedPagination) *feeds.Feed {
+func PublicationToFeed(hostBase string, record *models.Record, entries []*models.Record, pagination *feeds.FeedPagination) *feeds.Feed {
 	domain := record.GetString("domain")
 
 	links := []*feeds.Link{{Href: pagination.Self, Rel: "self"}}
@@ -78,8 +78,8 @@ func PublicationToFeed(record *models.Record, entries []*models.Record, paginati
 		links = append(links, &feeds.Link{Href: pagination.Next, Rel: "next"})
 	}
 
-	icon, _ := url.JoinPath(domain, RecordPropToImageSrcThumbnail(record, "icon", "100x100"))
-	logo, _ := url.JoinPath(domain, RecordPropToImageSrc(record, "logo"))
+	icon := RecordPropToImageSrcThumbnail(hostBase, record, "icon", "100x100")
+	logo := RecordPropToImageSrc(hostBase, record, "logo")
 
 	feed := &feeds.Feed{
 		Title:     record.GetString("title"),
@@ -103,7 +103,7 @@ func PublicationToFeed(record *models.Record, entries []*models.Record, paginati
 	}
 
 	for _, entry := range entries {
-		feed.Items = append(feed.Items, EntryToFeedItem(domain, entry))
+		feed.Items = append(feed.Items, EntryToFeedItem(hostBase, entry))
 	}
 
 	return feed

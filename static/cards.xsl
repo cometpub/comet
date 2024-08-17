@@ -14,9 +14,9 @@
                 <xsl:apply-templates select="atom:published"/>
             </header>
             <xsl:if test="atom:content != '' and atom:title != ''">
-                <h1 class="p-name">
+                <h2 class="p-name">
                     <xsl:value-of select="atom:title" />
-                </h1>
+                </h2>
             </xsl:if>
             <xsl:if test="not(atom:content) and atom:link[starts-with(@type, 'image/')]">
                 <xsl:choose>
@@ -84,7 +84,7 @@
     
     <xsl:template match="atom:category">
         <li>
-            <a role="button" class="p-category">
+            <a role="button" class="p-category" rel="category tag">
                 <xsl:attribute name="href">
                     <xsl:value-of select="concat('/c/', .)" />
                 </xsl:attribute>
@@ -95,12 +95,10 @@
     </xsl:template>
     
     <xsl:template match="atom:link[starts-with(@type, 'image/')]">
-        <li>
-            <img alt="">
-                <xsl:attribute name="src">
-                    <xsl:value-of select="@href" />
-                </xsl:attribute>
-            </img>
-        </li>
+        <img alt="">
+            <xsl:attribute name="src">
+                <xsl:value-of select="@href" />
+            </xsl:attribute>
+        </img>
     </xsl:template>
 </xsl:stylesheet>

@@ -84,5 +84,6 @@ ul:has(a[rel~="category"]) {
   & .p-summary {
     margin-block: var(--space-m);
     font-size: var(--font-size-l);
+    line-height: 1.5;
   }
 }

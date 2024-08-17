@@ -41,6 +41,12 @@
 
   --color-link: var(--primary-900);
 
+  --font-serif: Rockwell, "Rockwell Nova", "Roboto Slab", "DejaVu Serif",
+    "Sitka Small", serif;
+  font-weight: normal;
+  --font-sans: Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans",
+    source-sans-pro, sans-serif;
+
   /* @link https://utopia.fyi/type/calculator?c=320,16,1.2,1240,18,1.25,5,1,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
   --font-size-s: clamp(0.8333rem, 0.8101rem + 0.1159vi, 0.9rem);
   --font-size-m: clamp(1rem, 0.9565rem + 0.2174vi, 1.125rem);
@@ -77,8 +83,7 @@
 }
 
 html {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
-    Noto Sans, sans-serif;
+  font-family: var(--font-sans);
   font-size: var(--font-size-m);
   max-width: 80ch;
   margin: auto;
@@ -116,6 +121,15 @@ html:has(main > article:only-child) {
     justify-content: center;
     flex: 1;
   }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
 }
 
 h1 {

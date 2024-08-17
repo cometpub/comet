@@ -45,4 +45,7 @@ func InitAppRoutes(e *core.ServeEvent, app core.App) {
 
 	feedGroup := e.Router.Group("")
 	RegisterFeedRoutes(app, feedGroup)
+
+	entryGroup := e.Router.Group("/posts")
+	RegisterEntryRoutes(app, entryGroup)
 }

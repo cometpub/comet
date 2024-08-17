@@ -3,14 +3,15 @@ body > header {
   align-items: center;
   gap: var(--space-xs);
 
-  & a[href="/"] {
+  & nav {
     display: flex;
-    align-items: center;
-    gap: var(--space-2xs);
-  }
+    gap: var(--space-xs);
 
-  & h1 {
-    font-size: var(--font-size-l);
+    & a {
+      color: inherit;
+      text-decoration: none;
+      font-size: var(--font-size-m);
+    }
   }
 
   & theme-toggle {

@@ -101,9 +101,9 @@ func FindEntriesForPublication(app core.App, publication string, category string
 	return records, nil
 }
 
-func EntryToFeedItem(domain string, record *models.Record) *feeds.Item {
+func EntryToFeedItem(hostBase string, record *models.Record) *feeds.Item {
 	slug := record.GetString("slug")
-	link, err := url.JoinPath(domain, "entry", slug)
+	link, err := url.JoinPath(hostBase, "posts", slug)
 	if err != nil {
 		link = ""
 	}
@@ -116,13 +116,13 @@ func EntryToFeedItem(domain string, record *models.Record) *feeds.Item {
 	}
 
 	for _, photo := range record.GetStringSlice("photos") {
-		url := RecordValueToImageSrc(record, photo)
+		url := RecordValueToImageSrc(hostBase, record, photo)
 		mimetype := mime.TypeByExtension(filepath.Ext(url))
 		entry.Enclosures = append(entry.Enclosures, &feeds.Enclosure{Url: url, Type: mimetype})
 	}
 
 	for _, author := range record.ExpandedAll("authors") {
-		icon, _ := url.JoinPath(domain, RecordPropToImageSrcThumbnail(author, "avatar", "100x100"))
+		icon := RecordPropToImageSrcThumbnail(hostBase, author, "avatar", "100x100")
 		entry.Authors = append(entry.Authors, &feeds.Person{
 			Name:     author.GetString("name"),
 			Icon:     icon,

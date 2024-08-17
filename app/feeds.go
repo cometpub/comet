@@ -49,8 +49,9 @@ func AtomFeedGet(c echo.Context) error {
 	publication := c.Get(middleware.ContextPublication).(*models.Record)
 	entries := c.Get(middleware.ContextEntries).([]*models.Record)
 	pagination := c.Get(middleware.ContextPagination).(*feeds.FeedPagination)
+	hostBase := c.Get(middleware.ContextHostBase).(string)
 
-	feed := publications.PublicationToFeed(publication, entries, pagination)
+	feed := publications.PublicationToFeed(hostBase, publication, entries, pagination)
 
 	atomFeed, _ := feed.ToAtom()
 
@@ -64,8 +65,9 @@ func JsonFeedGet(c echo.Context) error {
 	publication := c.Get(middleware.ContextPublication).(*models.Record)
 	entries := c.Get(middleware.ContextEntries).([]*models.Record)
 	pagination := c.Get(middleware.ContextPagination).(*feeds.FeedPagination)
+	hostBase := c.Get(middleware.ContextHostBase).(string)
 
-	feed := publications.PublicationToFeed(publication, entries, pagination)
+	feed := publications.PublicationToFeed(hostBase, publication, entries, pagination)
 
 	jsonFeed, _ := feed.ToJSON()
 
@@ -79,8 +81,9 @@ func RSSFeedGet(c echo.Context) error {
 	publication := c.Get(middleware.ContextPublication).(*models.Record)
 	entries := c.Get(middleware.ContextEntries).([]*models.Record)
 	pagination := c.Get(middleware.ContextPagination).(*feeds.FeedPagination)
+	hostBase := c.Get(middleware.ContextHostBase).(string)
 
-	feed := publications.PublicationToFeed(publication, entries, pagination)
+	feed := publications.PublicationToFeed(hostBase, publication, entries, pagination)
 
 	rssFeed, _ := feed.ToRss()
 

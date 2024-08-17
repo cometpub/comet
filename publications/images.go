@@ -7,8 +7,8 @@ import (
 	"github.com/pocketbase/pocketbase/models"
 )
 
-func RecordValueToImageSrc(record *models.Record, value string) string {
-	src, err := url.JoinPath("/api", "files", record.Collection().Id, record.Id, value)
+func RecordValueToImageSrc(hostBase string, record *models.Record, value string) string {
+	src, err := url.JoinPath(hostBase, "/api", "files", record.Collection().Id, record.Id, value)
 
 	if err != nil {
 		return ""
@@ -17,8 +17,8 @@ func RecordValueToImageSrc(record *models.Record, value string) string {
 	return src
 }
 
-func RecordValueToImageSrcThumbnail(record *models.Record, value string, thumbnailSize string) string {
-	src := RecordValueToImageSrc(record, value)
+func RecordValueToImageSrcThumbnail(hostBase string, record *models.Record, value string, thumbnailSize string) string {
+	src := RecordValueToImageSrc(hostBase, record, value)
 
 	if value == "" {
 		return value
@@ -27,7 +27,7 @@ func RecordValueToImageSrcThumbnail(record *models.Record, value string, thumbna
 	return fmt.Sprintf("%s?thumb=%s", src, thumbnailSize)
 }
 
-func RecordPropToImageSrc(record *models.Record, key string) string {
+func RecordPropToImageSrc(hostBase string, record *models.Record, key string) string {
 	value := record.GetString(key)
 
 	if value == "" {
@@ -40,7 +40,7 @@ func RecordPropToImageSrc(record *models.Record, key string) string {
 		value = values[0]
 	}
 
-	src, err := url.JoinPath("/api", "files", record.Collection().Id, record.Id, value)
+	src, err := url.JoinPath(hostBase, "/api", "files", record.Collection().Id, record.Id, value)
 
 	if err != nil {
 		return ""
@@ -49,8 +49,8 @@ func RecordPropToImageSrc(record *models.Record, key string) string {
 	return src
 }
 
-func RecordPropToImageSrcThumbnail(record *models.Record, key string, thumbnailSize string) string {
-	value := RecordPropToImageSrc(record, key)
+func RecordPropToImageSrcThumbnail(hostBase string, record *models.Record, key string, thumbnailSize string) string {
+	value := RecordPropToImageSrc(hostBase, record, key)
 
 	if value == "" {
 		return value

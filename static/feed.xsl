@@ -64,10 +64,14 @@
                         <xsl:value-of select="atom:icon"/>
                     </xsl:attribute>
                 </img>
-                <h1>
+                <h1 class="sr-only">
                     <xsl:value-of select="atom:title"/>
                 </h1>
             </a>
+            <nav>
+                <a href="/articles">Articles</a>
+                <a href="/notes">Notes</a>
+            </nav>
             <theme-toggle></theme-toggle>
             <a href="/atom.xml" class="icon-rss">
                 <span class="sr-only">RSS Feed</span>
