@@ -20,6 +20,8 @@ func LoadPublicationFromRequest(app core.App) echo.MiddlewareFunc {
 
 			httpHost := req.Host
 
+			app.Logger().Info("Load Publication", "httpHost", httpHost)
+
 			// Redirected from the reverse proxy?
 			if httpHost == "comet.pub" {
 				httpHost = req.Header.Get(HostHeader)
@@ -29,6 +31,8 @@ func LoadPublicationFromRequest(app core.App) echo.MiddlewareFunc {
 			}
 
 			hostBase := "https://" + httpHost
+
+			app.Logger().Info("Load Publication", "hostBase", hostBase)
 
 			// TEMP
 			if httpHost == "127.0.0.1:8090" || httpHost == "localhost:8090" {
@@ -40,6 +44,7 @@ func LoadPublicationFromRequest(app core.App) echo.MiddlewareFunc {
 			publication, err := publications.FindPublicationByDomain(app, fmt.Sprintf("https://%s", httpHost))
 
 			if err != nil {
+				app.Logger().Error("Load Publication", "error", err)
 				return next(c)
 			}
 
