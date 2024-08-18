@@ -55,7 +55,7 @@
     
     <xsl:template match="atom:entry/atom:author">
         <div class="h-card p-author">
-            <img class="u-logo">
+            <img class="u-logo" decoding="async" loading="lazy">
                 <xsl:attribute name="src">
                     <xsl:value-of select="comet:avatar" />
                 </xsl:attribute>
@@ -95,7 +95,7 @@
     </xsl:template>
     
     <xsl:template match="atom:link[starts-with(@type, 'image/')]">
-        <img alt="" class="u-photo">
+        <img alt="" class="u-photo" decoding="async" loading="lazy">
             <xsl:attribute name="src">
                 <xsl:value-of select="concat(@href, '?thumb=900x0')" />
             </xsl:attribute>
