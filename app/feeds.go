@@ -32,12 +32,6 @@ func RegisterFeedRoutes(app core.App, group *echo.Group) {
 	// handle feeds for category tags
 	group.GET("/category/:category", FeedGetByAccepts)
 	group.GET("/category/:category/:page", FeedGetByAccepts)
-
-	// handle archive routes by date
-	group.GET("/:year", FeedGetByAccepts)
-	group.GET("/:year/:month", FeedGetByAccepts)
-	group.GET("/:year/:month/:day", FeedGetByAccepts)
-	group.GET("/:year/:month/:day/:slug", FeedGetByAccepts)
 }
 
 func XMLWithXSLT(xml string, xslt string) string {
