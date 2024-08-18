@@ -5,6 +5,7 @@ import (
 
 	"github.com/cometpub/comet/middleware"
 	"github.com/labstack/echo/v5"
+	echoMiddleware "github.com/labstack/echo/v5/middleware"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 )
@@ -36,6 +37,8 @@ func resolveIndex(c echo.Context) error {
 }
 
 func InitAppRoutes(e *core.ServeEvent, app core.App) {
+	e.Router.Use(echoMiddleware.Logger())
+
 	// placeholder for the admin dashboard app
 	appGroup := e.Router.Group("/app", middleware.LoadAuthContextFromCookie(app), middleware.RequireUserAuth)
 	appGroup.GET("", ToDo)

@@ -1,9 +1,9 @@
 package app
 
 import (
+	"encoding/xml"
 	"fmt"
 	"net/http"
-	"regexp"
 
 	"github.com/cometpub/comet/feeds"
 	"github.com/cometpub/comet/middleware"
@@ -34,10 +34,16 @@ func RegisterFeedRoutes(app core.App, group *echo.Group) {
 	group.GET("/category/:category/:page", FeedGetByAccepts)
 }
 
-func XMLWithXSLT(xml string, xslt string) string {
-	re := regexp.MustCompile(`^<\?xml ([^)]+)\?>`)
-	str := re.ReplaceAllString(xml, fmt.Sprintf(`<?xml-stylesheet href="%s" type="text/xsl"?>`, xslt))
-	return str
+func XMLWithXSLT(c echo.Context, feed feeds.XmlFeed, xslt string) error {
+	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationXMLCharsetUTF8)
+	c.Response().WriteHeader(http.StatusOK)
+
+	c.Response().Write([]byte(fmt.Sprintf(`<?xml-stylesheet href="%s" type="text/xsl"?>`, xslt)))
+
+	encoder := xml.NewEncoder(c.Response())
+	encoder.Indent("", "\t")
+
+	return encoder.Encode(feed.FeedXml())
 }
 
 func FeedGetByAccepts(c echo.Context) error {
@@ -66,12 +72,7 @@ func AtomFeedGet(c echo.Context) error {
 
 	feed := publications.PublicationToFeed(hostBase, publication, entries, pagination)
 
-	atomFeed, _ := feed.ToAtom()
-
-	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationXMLCharsetUTF8)
-	c.Response().WriteHeader(http.StatusOK)
-
-	return c.String(http.StatusOK, XMLWithXSLT(atomFeed, "/static/feed.xsl"))
+	return XMLWithXSLT(c, &feeds.Atom{feed}, "/static/feed.xsl")
 }
 
 func JsonFeedGet(c echo.Context) error {

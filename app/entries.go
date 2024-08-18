@@ -1,8 +1,6 @@
 package app
 
 import (
-	"net/http"
-
 	"github.com/cometpub/comet/feeds"
 	"github.com/cometpub/comet/middleware"
 	"github.com/cometpub/comet/publications"
@@ -29,11 +27,6 @@ func EntryGet(app core.App) echo.HandlerFunc {
 
 		feed := publications.PublicationToFeed(hostBase, publication, []*models.Record{entry}, &feeds.FeedPagination{})
 
-		atomFeed, _ := feed.ToAtom()
-
-		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationXMLCharsetUTF8)
-		c.Response().WriteHeader(http.StatusOK)
-
-		return c.String(http.StatusOK, XMLWithXSLT(atomFeed, "/static/entry.xsl"))
+		return XMLWithXSLT(c, &feeds.Atom{feed}, "/static/entry.xsl")
 	}
 }
