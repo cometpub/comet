@@ -32,7 +32,7 @@ func LoadPublicationFromRequest(app core.App) echo.MiddlewareFunc {
 
 			// TEMP
 			if httpHost == "127.0.0.1:8090" || httpHost == "localhost:8090" {
-				hostBase = "http://" + hostBase
+				hostBase = "http://" + httpHost
 				httpHost = "comet.tonysull.co"
 			}
 
