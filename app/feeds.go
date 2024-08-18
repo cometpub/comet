@@ -51,13 +51,17 @@ func FeedGetByAccepts(c echo.Context) error {
 
 	types := accept.Parse(header)
 
-	if types.Accepts("application/rss+xml") {
-		return RSSFeedGet(c)
-	} else if types.Accepts("application/feed+json") || types.Accepts("application/json") {
-		return JsonFeedGet(c)
-	} else {
-		return AtomFeedGet(c)
+	for _, acceptType := range types {
+		if acceptType.Type == "application" {
+			if acceptType.Subtype == "feed+json" {
+				return JsonFeedGet(c)
+			} else if acceptType.Subtype == "rss+xml" {
+				return RSSFeedGet(c)
+			}
+		}
 	}
+
+	return AtomFeedGet(c)
 }
 
 func AtomFeedGet(c echo.Context) error {
