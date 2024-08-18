@@ -53,6 +53,8 @@ func LoadPublicationEntriesFromRequest(app core.App) echo.MiddlewareFunc {
 			typeParam := c.PathParam("type")
 			currentPage, _ := intOrDefault(c.PathParam("page"), 1)
 
+			app.Logger().Info("Load Publication Entries", "category", category, "typeParam", typeParam, "currentPage", currentPage)
+
 			var entryType publications.EntryType
 
 			if typeParam != "" {
@@ -66,6 +68,7 @@ func LoadPublicationEntriesFromRequest(app core.App) echo.MiddlewareFunc {
 						typeParam = ""
 						entryType = ""
 					} else {
+						app.Logger().Error("Load Publication Entries", "error", "Params invalid", "typeParam", typeParam, "currentPage", currentPage)
 						return apis.NewNotFoundError("", nil)
 					}
 				} else {
@@ -75,21 +78,27 @@ func LoadPublicationEntriesFromRequest(app core.App) echo.MiddlewareFunc {
 
 			entriesCount, err := publications.FindEntriesCountForDomain(app, publication.GetString("domain"), entryType, category)
 
+			app.Logger().Info("Load Publication Entries", "entriesCount", entriesCount)
+
 			if err != nil {
+				app.Logger().Error("Load Publication Entries", "message", "Loading entries", "error", err)
 				return c.NoContent(http.StatusInternalServerError)
 			}
 
 			if entriesCount == 0 && category != "" {
+				app.Logger().Error("Load Publication Entries", "error", "Category not found", "category", category)
 				return apis.NewNotFoundError("Category not found", nil)
 			}
 
 			if (currentPage-1)*feeds.PAGE_SIZE > entriesCount {
+				app.Logger().Error("Load Publication Entries", "error", "Page not found", "page", currentPage, "entriesCount", entriesCount)
 				return apis.NewNotFoundError("", nil)
 			}
 
 			entries, err := publications.FindEntriesForPublication(app, publication.Id, category, entryType, feeds.PAGE_SIZE, (currentPage-1)*feeds.PAGE_SIZE)
 
 			if err != nil {
+				app.Logger().Error("Load Publication Entries", "message", "Failed to load publications", "error", err)
 				return apis.NewApiError(http.StatusInternalServerError, "Failed to load publication entries", nil)
 			}
 
