@@ -35,6 +35,7 @@ func LoadPublicationEntryFromRequest(app core.App) echo.MiddlewareFunc {
 			)
 
 			if err != nil {
+				app.Logger().Error("Load Publication Entry", "error", "Not Found", "publication", publication.Id, "slug", slug)
 				return apis.NewNotFoundError("", err)
 			}
 
@@ -52,8 +53,6 @@ func LoadPublicationEntriesFromRequest(app core.App) echo.MiddlewareFunc {
 			category := c.PathParam("category")
 			typeParam := c.PathParam("type")
 			currentPage, _ := intOrDefault(c.PathParam("page"), 1)
-
-			app.Logger().Info("Load Publication Entries", "category", category, "typeParam", typeParam, "currentPage", currentPage)
 
 			var entryType publications.EntryType
 
@@ -77,8 +76,6 @@ func LoadPublicationEntriesFromRequest(app core.App) echo.MiddlewareFunc {
 			}
 
 			entriesCount, err := publications.FindEntriesCountForDomain(app, publication.GetString("domain"), entryType, category)
-
-			app.Logger().Info("Load Publication Entries", "entriesCount", entriesCount)
 
 			if err != nil {
 				app.Logger().Error("Load Publication Entries", "message", "Loading entries", "error", err)
