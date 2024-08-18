@@ -87,3 +87,7 @@ ul:has(a[rel~="category"]) {
     line-height: 1.5;
   }
 }
+
+.u-photo {
+  height: auto;
+}

@@ -69,6 +69,8 @@ type AtomLink struct {
 	Rel     string   `xml:"rel,attr,omitempty"`
 	Type    string   `xml:"type,attr,omitempty"`
 	Length  string   `xml:"length,attr,omitempty"`
+	Width   int      `xml:"comet:width,attr,omitempty"`
+	Height  int      `xml:"comet:height,attr,omitempty"`
 }
 
 type AtomGenerator struct {
@@ -138,7 +140,16 @@ func newAtomEntry(i *Item) *AtomEntry {
 	}
 
 	for _, enclosure := range i.Enclosures {
-		x.Links = append(x.Links, AtomLink{Href: enclosure.Url, Rel: "enclosure", Type: enclosure.Type, Length: enclosure.Length})
+		x.Links = append(
+			x.Links,
+			AtomLink{
+				Href:   enclosure.Url,
+				Rel:    "enclosure",
+				Type:   enclosure.Type,
+				Length: enclosure.Length,
+				Width:  enclosure.Width,
+				Height: enclosure.Height,
+			})
 	}
 
 	return x

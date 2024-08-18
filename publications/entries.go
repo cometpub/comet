@@ -57,7 +57,7 @@ func FindEntryAndSlug(app core.App, includePrivateEntries bool, publication stri
 	}
 
 	// expand the "authors" relations
-	if errs := app.Dao().ExpandRecord(record, []string{"authors", "categories"}, nil); len(errs) > 0 {
+	if errs := app.Dao().ExpandRecord(record, []string{"authors", "categories", "photos"}, nil); len(errs) > 0 {
 		app.Logger().Error("failed to expand entry authors", "error", errs, "entry", record.GetString("slug"))
 		return nil, fmt.Errorf("failed to expand entry authors %v", errs)
 	}
@@ -94,7 +94,7 @@ func FindEntriesForPublication(app core.App, publication string, category string
 	}
 
 	// expand the "authors" and "categories" relations
-	if errs := dao.ExpandRecords(records, []string{"authors", "categories"}, nil); len(errs) > 0 {
+	if errs := dao.ExpandRecords(records, []string{"authors", "categories", "photos"}, nil); len(errs) > 0 {
 		return nil, fmt.Errorf("failed to expand: %v", errs)
 	}
 
@@ -115,10 +115,26 @@ func EntryToFeedItem(hostBase string, record *models.Record) *feeds.Item {
 		Published: record.GetDateTime("published").Time(),
 	}
 
-	for _, photo := range record.GetStringSlice("photos") {
-		url := RecordValueToImageSrc(hostBase, record, photo)
+	featuredImage := RecordPropToImageSrc(hostBase, record, "featuredImage")
+	if featuredImage != "" {
+		mimetype := mime.TypeByExtension(filepath.Ext(featuredImage))
+		entry.Enclosures = append(
+			entry.Enclosures,
+			&feeds.Enclosure{Url: featuredImage, Type: mimetype})
+	}
+
+	for _, photo := range record.ExpandedAll("photos") {
+		url := RecordPropToImageSrc(hostBase, photo, "src")
 		mimetype := mime.TypeByExtension(filepath.Ext(url))
-		entry.Enclosures = append(entry.Enclosures, &feeds.Enclosure{Url: url, Type: mimetype})
+		entry.Enclosures = append(
+			entry.Enclosures,
+			&feeds.Enclosure{
+				Url:    url,
+				Type:   mimetype,
+				Width:  photo.GetInt("width"),
+				Height: photo.GetInt("height"),
+			},
+		)
 	}
 
 	for _, author := range record.ExpandedAll("authors") {

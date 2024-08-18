@@ -95,9 +95,15 @@
     </xsl:template>
     
     <xsl:template match="atom:link[starts-with(@type, 'image/')]">
-        <img alt="">
+        <img alt="" class="u-photo">
             <xsl:attribute name="src">
-                <xsl:value-of select="@href" />
+                <xsl:value-of select="concat(@href, '?thumb=900x0')" />
+            </xsl:attribute>
+            <xsl:attribute name="width">
+                <xsl:value-of select="@comet:width" />
+            </xsl:attribute>
+            <xsl:attribute name="height">
+                <xsl:value-of select="@comet:height" />
             </xsl:attribute>
         </img>
     </xsl:template>
