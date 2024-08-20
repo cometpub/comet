@@ -47,8 +47,18 @@
                     </xsl:attribute>
                     Full Post
                 </a>
-                <button aria-label="Share a direct link to this post" class="icon-share">
-                </button>
+                <share-button>
+                    <xsl:attribute name="title">
+                        <xsl:value-of select="atom:title" />
+                    </xsl:attribute>
+                    <xsl:attribute name="title">
+                        <xsl:value-of select="atom:title" />
+                    </xsl:attribute>
+                    <xsl:attribute name="url">
+                        <xsl:value-of select="atom:link[@rel='self']/@href" />
+                    </xsl:attribute>
+                    <span aria-label="Share a direct link to this post" class="icon-share"></span>
+                </share-button>
             </footer>
         </article>
     </xsl:template>

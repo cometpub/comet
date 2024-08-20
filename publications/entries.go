@@ -37,14 +37,9 @@ func ParseEntryType(str string) (EntryType, bool) {
 	return t, ok
 }
 
-func FindEntryAndSlug(app core.App, includePrivateEntries bool, publication string, slug string) (*models.Record, error) {
+func FindEntryAndSlug(app core.App, publication string, slug string) (*models.Record, error) {
 	filters := []string{"publication={:publication}", "slug={:slug}"}
 	params := dbx.Params{"publication": publication, "slug": slug}
-
-	if !includePrivateEntries {
-		filters = append(filters, "status={:status}")
-		params["status"] = "public"
-	}
 
 	record, err := app.Dao().FindFirstRecordByFilter(
 		"entries",

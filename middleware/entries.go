@@ -9,7 +9,6 @@ import (
 	"github.com/cometpub/comet/feeds"
 	"github.com/cometpub/comet/publications"
 	"github.com/labstack/echo/v5"
-	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/models"
@@ -26,13 +25,7 @@ func LoadPublicationEntryFromRequest(app core.App) echo.MiddlewareFunc {
 
 			slug := c.PathParam("slug")
 
-			record, err := app.Dao().FindFirstRecordByFilter(
-				"entries", "publication={:publication} && slug={:slug}",
-				dbx.Params{
-					"publication": publication.Id,
-					"slug":        slug,
-				},
-			)
+			record, err := publications.FindEntryAndSlug(app, publication.Id, slug)
 
 			if err != nil {
 				app.Logger().Error("Load Publication Entry", "error", "Not Found", "publication", publication.Id, "slug", slug)
