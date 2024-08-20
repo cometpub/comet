@@ -86,7 +86,7 @@ shareButtonTmpl.innerHTML = `
     <p aria-hidden="true">Copied!</p>
 </button>
 `;
-var ShareButton = class _ShareButton extends HTMLElement {
+var ShareButton = class extends HTMLElement {
   static WebShareSupported = navigator != null && typeof navigator.share == "function";
   /**
    * @type {HTMLButtonElement}
@@ -111,7 +111,7 @@ var ShareButton = class _ShareButton extends HTMLElement {
   connectedCallback() {
     this.#buttonElem = this.shadowRoot.querySelector("button");
     this.#tooltipElem = this.shadowRoot.querySelector("p");
-    this.#buttonElem.onclick = () => this.share();
+    this.#buttonElem.onclick = this.WebShareSupported ? () => this.share() : () => this.copyToClipboard();
   }
   get title() {
     return this.getAttribute("title");
@@ -123,27 +123,30 @@ var ShareButton = class _ShareButton extends HTMLElement {
     return this.getAttribute("url");
   }
   async share() {
-    if (_ShareButton.WebShareSupported) {
-      const shareData = {
-        title: this.title,
-        text: this.text,
-        url: this.url
-      };
-      try {
-        await navigator.share(shareData);
-      } catch {
-      }
-    } else {
-      navigator.clipboard.writeText(this.url);
-      this.#tooltipElem.ariaHidden = false;
-      if (!!this.#tooltipTimeout) {
-        clearTimeout(this.#tooltipTimeout);
-      }
-      this.#tooltipTimeout = setTimeout(
-        () => this.#tooltipElem.ariaHidden = true,
-        1500
-      );
+    const shareData = {
+      url: this.url
+    };
+    if (this.title) {
+      shareData.title = this.title;
     }
+    if (this.text) {
+      shareData.text = this.text;
+    }
+    try {
+      await navigator.share(shareData);
+    } catch {
+    }
+  }
+  copyToClipboard() {
+    navigator.clipboard.writeText(this.url);
+    this.#tooltipElem.ariaHidden = false;
+    if (!!this.#tooltipTimeout) {
+      clearTimeout(this.#tooltipTimeout);
+    }
+    this.#tooltipTimeout = setTimeout(
+      () => this.#tooltipElem.ariaHidden = true,
+      1500
+    );
   }
 };
 customElements.define("share-button", ShareButton);

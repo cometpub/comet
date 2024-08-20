@@ -9,16 +9,7 @@ ul:has(a[rel~="category"]) {
   flex-wrap: wrap;
 }
 
-.h-entry:not(:has(.p-content)) {
-  background-color: var(--surface-2);
-  max-width: 50ch;
-  width: 100%;
-  border-radius: 0.33em;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-s);
-  padding: var(--space-s);
-
+.h-entry {
   & .p-author {
     display: flex;
     align-items: center;
@@ -31,6 +22,17 @@ ul:has(a[rel~="category"]) {
       object-fit: cover;
     }
   }
+}
+
+.h-entry:not(:has(.p-content)) {
+  background-color: var(--surface-2);
+  max-width: 50ch;
+  width: 100%;
+  border-radius: 0.33em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  padding: var(--space-s);
 
   & .p-author {
     & + * {
@@ -59,15 +61,19 @@ ul:has(a[rel~="category"]) {
     display: grid;
     gap: var(--space-s);
     align-items: center;
-    grid-template-columns: auto 1fr;
-    grid-template-areas: "name name" "published categories";
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "categories categories" "title title" "author published";
 
     & .p-name {
-      grid-area: name;
+      grid-area: title;
     }
 
     & .dt-published {
       grid-area: published;
+    }
+
+    & .p-author {
+      grid-area: author;
     }
 
     & ul:has([rel~="category"]) {

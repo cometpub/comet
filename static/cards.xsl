@@ -96,7 +96,7 @@
         <li>
             <a role="button" class="p-category" rel="category tag">
                 <xsl:attribute name="href">
-                    <xsl:value-of select="concat('/c/', .)" />
+                    <xsl:value-of select="concat('/category/', .)" />
                 </xsl:attribute>
                 #
                 <xsl:value-of select="." />

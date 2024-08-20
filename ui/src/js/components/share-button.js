@@ -74,7 +74,9 @@ class ShareButton extends HTMLElement {
     this.#buttonElem = this.shadowRoot.querySelector("button");
     this.#tooltipElem = this.shadowRoot.querySelector("p");
 
-    this.#buttonElem.onclick = () => this.share();
+    this.#buttonElem.onclick = this.WebShareSupported
+      ? () => this.share()
+      : () => this.copyToClipboard();
   }
 
   get title() {
@@ -90,29 +92,35 @@ class ShareButton extends HTMLElement {
   }
 
   async share() {
-    if (ShareButton.WebShareSupported) {
-      const shareData = {
-        title: this.title,
-        text: this.text,
-        url: this.url,
-      };
+    const shareData = {
+      url: this.url,
+    };
 
-      try {
-        await navigator.share(shareData);
-      } catch {}
-    } else {
-      navigator.clipboard.writeText(this.url);
-      this.#tooltipElem.ariaHidden = false;
-
-      if (!!this.#tooltipTimeout) {
-        clearTimeout(this.#tooltipTimeout);
-      }
-
-      this.#tooltipTimeout = setTimeout(
-        () => (this.#tooltipElem.ariaHidden = true),
-        1500
-      );
+    if (this.title) {
+      shareData.title = this.title;
     }
+
+    if (this.text) {
+      shareData.text = this.text;
+    }
+
+    try {
+      await navigator.share(shareData);
+    } catch {}
+  }
+
+  copyToClipboard() {
+    navigator.clipboard.writeText(this.url);
+    this.#tooltipElem.ariaHidden = false;
+
+    if (!!this.#tooltipTimeout) {
+      clearTimeout(this.#tooltipTimeout);
+    }
+
+    this.#tooltipTimeout = setTimeout(
+      () => (this.#tooltipElem.ariaHidden = true),
+      1500
+    );
   }
 }
 

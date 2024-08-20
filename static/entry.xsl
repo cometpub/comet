@@ -38,9 +38,15 @@
                         <xsl:when test="$entry/atom:content != ''">
                             <section class="h-entry">
                                 <header>
+                                    <xsl:if test="$entry/atom:category != ''">
+                                        <ul role="list">
+                                            <xsl:apply-templates select="$entry/atom:category" />
+                                        </ul>
+                                    </xsl:if>
                                     <h1 class="p-name">
                                         <xsl:value-of select="$entry/atom:title"/>
                                     </h1>
+                                    <xsl:apply-templates select="$entry/atom:author" />
                                     <xsl:apply-templates select="$entry/atom:published"/>
                                 </header>
                                 <hr/>

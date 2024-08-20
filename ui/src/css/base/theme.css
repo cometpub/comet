@@ -46,6 +46,8 @@
   font-weight: normal;
   --font-sans: Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans",
     source-sans-pro, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
+    "DejaVu Sans Mono", monospace;
 
   /* @link https://utopia.fyi/type/calculator?c=320,16,1.2,1240,18,1.25,5,1,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
   --font-size-s: clamp(0.8333rem, 0.8101rem + 0.1159vi, 0.9rem);
@@ -129,6 +131,8 @@ h3,
 h4,
 h5,
 h6 {
+  text-wrap: balance;
+  text-wrap: pretty;
   font-family: var(--font-sans);
 }
 
@@ -158,6 +162,12 @@ h6 {
 
 small {
   font-size: var(--font-size-s);
+}
+
+code,
+pre,
+locale-date {
+  font-family: var(--font-mono);
 }
 
 a,
