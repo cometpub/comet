@@ -1,0 +1,22 @@
+<xsl:template match="atom:feed">
+    <header>
+        <a href="/">
+            <img width="48" height="48" aria-hidden="true">
+                <xsl:attribute name="src">
+                    <xsl:value-of select="atom:icon"/>
+                </xsl:attribute>
+            </img>
+            <h1 class="sr-only">
+                <xsl:value-of select="atom:title"/>
+            </h1>
+        </a>
+        <nav>
+            <a href="/articles">Articles</a>
+            <a href="/notes">Notes</a>
+        </nav>
+        <theme-toggle></theme-toggle>
+        <a href="/atom.xml" class="icon-rss">
+            <span class="sr-only">RSS Feed</span>
+        </a>
+    </header>
+</xsl:template>

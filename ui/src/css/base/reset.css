@@ -46,10 +46,10 @@ blockquote {
   border-inline-start: 0.25rem solid var(--text-accent);
   padding: var(--space-s);
   padding-inline-end: 0;
+}
 
-  & > p {
-    display: initial;
-  }
+blockquote > p {
+  display: initial;
 }
 
 h1,
@@ -79,19 +79,19 @@ textarea {
 :where(ul, ol, dl)[role="list"] {
   margin: 0;
   padding: 0;
+}
 
-  & > li {
-    list-style: none;
-  }
+:where(ul, ol, dl)[role="list"] > li {
+  list-style: none;
 }
 
 ul {
   list-style-position: inside;
   list-style-type: disc;
+}
 
-  & > li > p:first-child {
-    display: initial;
-  }
+ul > li > p:first-child {
+  display: initial;
 }
 
 li:has(> p:first-child > input[type="checkbox"]:first-child) {

@@ -5,70 +5,66 @@
 @import url(./utils/utilities.css) layer(utilities);
 
 @layer view {
-  @layer components {
-    body > header {
-      display: flex;
-      align-items: center;
-      gap: var(--space-xs);
+  body > header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
 
-      & a[href="/"] {
-        display: flex;
-        align-items: center;
-        gap: var(--space-2xs);
-        font-size: var(--font-size-lg);
-      }
+  body > header a[href="/"] {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--font-size-lg);
+  }
 
-      & theme-toggle {
-        margin-inline-start: auto;
-      }
+  body > header theme-toggle {
+    margin-inline-start: auto;
+  }
+
+  article {
+    padding: var(--space-s-m);
+    border-radius: 0.5em;
+    background-color: var(--surface-2);
+    width: 100%;
+    max-width: 50ch;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m-l);
+  }
+
+  article header h1 {
+    text-align: center;
+    font-size: var(--font-size-2xl);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  form fieldset {
+    background-color: var(--surface-1);
+    padding: var(--space-2xs);
+    border-radius: 0.25em;
+  }
+
+  form fieldset label {
+    display: block;
+    font-size: var(--font-size-sm);
+    margin-block-end: var(--space-2xs);
+    line-height: 1;
+
+    &:has(+ input[required])::after {
+      content: "\a0*";
+      color: red;
     }
+  }
 
-    article {
-      padding: var(--space-s-m);
-      border-radius: 0.5em;
-      background-color: var(--surface-2);
-      width: 100%;
-      max-width: 50ch;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-m-l);
-
-      & header {
-        & h1 {
-          text-align: center;
-          font-size: var(--font-size-2xl);
-        }
-      }
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-m);
-
-      & fieldset {
-        background-color: var(--surface-1);
-        padding: var(--space-2xs);
-        border-radius: 0.25em;
-
-        & label {
-          display: block;
-          font-size: var(--font-size-sm);
-          margin-block-end: var(--space-2xs);
-          line-height: 1;
-
-          &:has(+ input[required])::after {
-            content: "\a0*";
-            color: red;
-          }
-        }
-
-        & input:where([type="text"], [type="password"]) {
-          width: 100%;
-          border: none;
-          background-color: transparent;
-        }
-      }
-    }
+  form fieldset input:where([type="text"], [type="password"]) {
+    width: 100%;
+    border: none;
+    background-color: transparent;
   }
 }

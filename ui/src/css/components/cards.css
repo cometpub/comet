@@ -9,19 +9,17 @@ ul:has(a[rel~="category"]) {
   flex-wrap: wrap;
 }
 
-.h-entry {
-  & .p-author {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
+.h-entry .p-author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
 
-    & .u-logo {
-      border-radius: 9999px;
-      height: var(--space-xl);
-      width: var(--space-xl);
-      object-fit: cover;
-    }
-  }
+.h-entry .p-author .u-logo {
+  border-radius: 9999px;
+  height: var(--space-xl);
+  width: var(--space-xl);
+  object-fit: cover;
 }
 
 .h-entry:not(:has(.p-content)) {
@@ -33,65 +31,59 @@ ul:has(a[rel~="category"]) {
   flex-direction: column;
   gap: var(--space-s);
   padding: var(--space-s);
-
-  & .p-author {
-    & + * {
-      margin-inline-start: auto;
-    }
-
-    & .p-name {
-      font-size: var(--font-size-m);
-    }
-  }
-
-  & .p-name {
-    font-size: var(--font-size-xl);
-  }
-
-  & :where(header, footer) {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-xs);
-  }
 }
 
-.h-entry:has(.p-content) {
-  & header {
-    display: grid;
-    gap: var(--space-s);
-    align-items: center;
-    grid-template-columns: 1fr auto;
-    grid-template-areas: "categories categories" "title title" "author published";
+.h-entry:not(:has(.p-content)) .p-author + * {
+  margin-inline-start: auto;
+}
 
-    & .p-name {
-      grid-area: title;
-    }
+.h-entry:not(:has(.p-content)) .p-author .p-name {
+  font-size: var(--font-size-m);
+}
 
-    & .dt-published {
-      grid-area: published;
-    }
+.h-entry:not(:has(.p-content)) .p-name {
+  font-size: var(--font-size-xl);
+}
 
-    & .p-author {
-      grid-area: author;
-    }
+.h-entry:not(:has(.p-content)) :where(header, footer) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+}
 
-    & ul:has([rel~="category"]) {
-      grid-area: categories;
-    }
-  }
+.h-entry:has(.p-content) header {
+  display: grid;
+  gap: var(--space-s);
+  align-items: center;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "categories categories" "title title" "author published";
+}
 
-  & footer {
-    & .u-url {
-      margin-inline-end: -0.67em;
-    }
-  }
+.h-entry:has(.p-content) header .p-name {
+  grid-area: title;
+}
 
-  & .p-summary {
-    margin-block: var(--space-m);
-    font-size: var(--font-size-l);
-    line-height: 1.5;
-  }
+.h-entry:has(.p-content) header .dt-published {
+  grid-area: published;
+}
+
+.h-entry:has(.p-content) header .p-author {
+  grid-area: author;
+}
+
+.h-entry:has(.p-content) header ul:has([rel~="category"]) {
+  grid-area: categories;
+}
+
+.h-entry:has(.p-content) footer .u-url {
+  margin-inline-end: -0.67em;
+}
+
+.h-entry:has(.p-content) .p-summary {
+  margin-block: var(--space-m);
+  font-size: var(--font-size-l);
+  line-height: 1.5;
 }
 
 .u-photo {

@@ -1,15 +1,11 @@
-.p-summary,
-.p-content,
-.ProseMirror {
-  & > * + * {
-    margin-block-start: var(--space-s);
-  }
+:where(.p-summary, .p-content) > * + * {
+  margin-block-start: var(--space-s);
+}
 
-  & :where(h2, h3, h4, h5, h6) {
-    margin: calc(1rem + 0.75em) 0 calc(0.5rem + 0.15em);
-  }
+:where(.p-summary, .p-content) :where(h2, h3, h4, h5, h6) {
+  margin: calc(1rem + 0.75em) 0 calc(0.5rem + 0.15em);
+}
 
-  & ul {
-    padding-inline-start: 0;
-  }
+:where(.p-summary, .p-content) ul {
+  padding-inline-start: 0;
 }

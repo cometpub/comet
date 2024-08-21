@@ -3,7 +3,6 @@
 @import url(./base/prose.css) layer(base.prose);
 @import url(./base/theme.css) layer(base.theme);
 @import url(./components/components.css) layer(components);
-@import url(./components/editor.css) layer(components);
 @import url(./fonts/icons.css) layer(components);
 @import url(./utils/utilities.css) layer(utilities);
 @import url(./components/cards.css) layer(view);
@@ -28,22 +27,22 @@
     width: 100%;
     max-width: 50ch;
     margin-inline: auto;
+  }
 
-    & a[rel="first"] {
-      grid-area: first;
-    }
+  nav[aria-label="Pagination"] a[rel="first"] {
+    grid-area: first;
+  }
 
-    & a[rel="previous"] {
-      grid-area: previous;
-    }
+  nav[aria-label="Pagination"] a[rel="previous"] {
+    grid-area: previous;
+  }
 
-    & a[rel="next"] {
-      grid-area: next;
-    }
+  nav[aria-label="Pagination"] a[rel="next"] {
+    grid-area: next;
+  }
 
-    & a[rel="last"] {
-      grid-area: last;
-    }
+  nav[aria-label="Pagination"] a[rel="last"] {
+    grid-area: last;
   }
 
   form[action="/publish"] {

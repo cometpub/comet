@@ -2,21 +2,21 @@ body > header {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
+}
 
-  & nav {
-    display: flex;
-    gap: var(--space-xs);
+body > header nav {
+  display: flex;
+  gap: var(--space-xs);
+}
 
-    & a {
-      color: inherit;
-      text-decoration: none;
-      font-size: var(--font-size-m);
-    }
-  }
+body > header nav a {
+  color: inherit;
+  text-decoration: none;
+  font-size: var(--font-size-m);
+}
 
-  & theme-toggle {
-    margin-inline-start: auto;
-  }
+body > header theme-toggle {
+  margin-inline-start: auto;
 }
 
 :where(
@@ -40,24 +40,52 @@ body > header {
   padding: 0.125em 0.67em;
   text-decoration: none;
   cursor: pointer;
+}
 
-  &.outline {
-    --border-color: var(--text-accent);
-  }
+:where(
+    [role="button"],
+    [type="button"],
+    [type="file"]::file-selector-button,
+    [type="reset"],
+    [type="submit"],
+    button
+  ).outline {
+  --border-color: var(--text-accent);
+}
 
-  &:where(.outline, .ghost, [class^="icon-"]:empty, [class*=" icon-"]:empty) {
-    --background: transparent;
-    --color: var(--text-accent);
-  }
+:where(
+    [role="button"],
+    [type="button"],
+    [type="file"]::file-selector-button,
+    [type="reset"],
+    [type="submit"],
+    button
+  ):where(.outline, .ghost, [class^="icon-"]:empty, [class*=" icon-"]:empty) {
+  --background: transparent;
+  --color: var(--text-accent);
+}
 
-  &:where([class^="icon-"]:empty, [class*=" icon-"]:empty) {
-    font-size: var(--font-size-l);
-  }
+:where(
+    [role="button"],
+    [type="button"],
+    [type="file"]::file-selector-button,
+    [type="reset"],
+    [type="submit"],
+    button
+  ):where([class^="icon-"]:empty, [class*=" icon-"]:empty) {
+  font-size: var(--font-size-l);
+}
 
-  &[role="link"] {
-    --color: var(--text-accent);
-    --background: transparent;
-    border: none;
-    padding: 0;
-  }
+:where(
+    [role="button"],
+    [type="button"],
+    [type="file"]::file-selector-button,
+    [type="reset"],
+    [type="submit"],
+    button
+  )[role="link"] {
+  --color: var(--text-accent);
+  --background: transparent;
+  border: none;
+  padding: 0;
 }

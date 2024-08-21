@@ -1,0 +1,64 @@
+<xsl:stylesheet
+    exclude-result-prefixes="#all"
+    expand-text="yes"
+    version="3.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:comet="https://comet.pub/Atom"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <xsl:output method="html" encoding="utf-8" indent="yes"/>
+    
+    <xsl:template match="/">
+        <html lang="en" data-theme="light">
+            <head>
+                <!-- Common -->
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <title>
+                    <xsl:value-of select="atom:feed/atom:title"/>
+                </title>
+                <!-- Favicons -->
+                <link rel="icon">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/atom:feed/atom:icon"/>
+                    </xsl:attribute>
+                </link>
+                <!-- Comet styles and scripts -->
+                <style>
+                    {{> css-feed}}
+                </style>
+                <script src="/static/js/feed.js" type="module"></script>
+            </head>
+            <body>
+                <xsl:apply-templates select="atom:feed" />
+                <main>
+                    <xsl:apply-templates select="atom:feed/atom:category" />
+                    <ol role="list">
+                        <xsl:for-each select="atom:feed/atom:entry">
+                            <li>
+                                <xsl:apply-templates select="." />
+                            </li>
+                        </xsl:for-each>
+                        
+                    </ol>
+                    <xsl:if test="atom:feed/atom:link[@rel='previous'] or atom:feed/atom:link[@rel='next']">
+                        <footer>
+                            <nav aria-label="Pagination">
+                                <xsl:apply-templates select="atom:feed/atom:link[@rel='first']"/>
+                                <xsl:apply-templates select="atom:feed/atom:link[@rel='previous']"/>
+                                <xsl:apply-templates select="atom:feed/atom:link[@rel='next']"/>
+                                <xsl:apply-templates select="atom:feed/atom:link[@rel='last']"/>
+                            </nav>
+                        </footer>
+                    </xsl:if>
+                </main>
+            </body>
+        </html>
+    </xsl:template>
+
+    {{> layout}}
+    {{> cards}}
+    {{> pagination}}
+
+</xsl:stylesheet>

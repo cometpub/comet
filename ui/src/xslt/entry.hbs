@@ -1,0 +1,73 @@
+<xsl:stylesheet
+    exclude-result-prefixes="#all"
+    expand-text="yes"
+    version="3.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:comet="https://comet.pub/Atom"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <xsl:output method="html" encoding="utf-8" indent="yes"/>
+    
+    <xsl:template match="/">
+        <html lang="en" data-theme="light">
+            <head>
+                <!-- Common -->
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <title>
+                    <xsl:value-of select="atom:feed/atom:title"/>
+                </title>
+                <!-- Favicons -->
+                <link rel="icon">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/atom:feed/atom:icon"/>
+                    </xsl:attribute>
+                </link>
+                <!-- Comet styles and scripts -->
+                <style>
+                    {{> css-feed}}
+                </style>
+                <script src="/static/js/feed.js" type="module"></script>
+            </head>
+            <body>
+                <xsl:variable name="entry" select="atom:feed/atom:entry[1]"/>
+                <xsl:apply-templates select="atom:feed" />
+                <main>
+                    <xsl:choose>
+                        <xsl:when test="$entry/atom:content != ''">
+                            <section class="h-entry">
+                                <header>
+                                    <xsl:if test="$entry/atom:category != ''">
+                                        <ul role="list">
+                                            <xsl:apply-templates select="$entry/atom:category" />
+                                        </ul>
+                                    </xsl:if>
+                                    <h1 class="p-name">
+                                        <xsl:value-of select="$entry/atom:title"/>
+                                    </h1>
+                                    <xsl:apply-templates select="$entry/atom:author" />
+                                    <xsl:apply-templates select="$entry/atom:published"/>
+                                </header>
+                                <hr/>
+                                <blockquote class="p-summary">
+                                    <xsl:value-of select="$entry/atom:summary"/>
+                                </blockquote>
+                                <div class="p-content">
+                                    <xsl:apply-templates select="$entry/atom:content"/>
+                                </div>
+                            </section>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:apply-templates select="$entry" />
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </main>
+            </body>
+        </html>
+    </xsl:template>
+
+    {{> layout}}
+    {{> cards}}
+
+</xsl:stylesheet>

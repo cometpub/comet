@@ -1,0 +1,35 @@
+<xsl:template match="atom:feed/atom:link[@rel='previous']">
+    <a rel="previous">
+        <xsl:attribute name="href">
+            <xsl:value-of select="@href" />
+        </xsl:attribute>
+        Previous
+    </a>
+</xsl:template>
+
+<xsl:template match="atom:feed/atom:link[@rel='next']">
+    <a rel="next">
+        <xsl:attribute name="href">
+            <xsl:value-of select="@href" />
+        </xsl:attribute>
+        Next
+    </a>
+</xsl:template>
+
+<xsl:template match="atom:feed/atom:link[@rel='first']">
+    <a rel="first">
+        <xsl:attribute name="href">
+            <xsl:value-of select="@href" />
+        </xsl:attribute>
+        First
+    </a>
+</xsl:template>
+
+<xsl:template match="atom:feed/atom:link[@rel='last']">
+    <a rel="last">
+        <xsl:attribute name="href">
+            <xsl:value-of select="@href" />
+        </xsl:attribute>
+        Last
+    </a>
+</xsl:template>
