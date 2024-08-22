@@ -5,6 +5,7 @@ go 1.22.6
 require (
 	github.com/a-h/templ v0.2.747
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
+	github.com/gosimple/slug v1.14.0
 	github.com/labstack/echo/v5 v5.0.0-20230722203903-ec5b858dab61
 	github.com/pocketbase/dbx v1.10.1
 	github.com/pocketbase/pocketbase v0.22.19
@@ -45,6 +46,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.13.0 // indirect
+	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect

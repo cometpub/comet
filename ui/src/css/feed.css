@@ -56,4 +56,16 @@
     flex-direction: column;
     gap: var(--space-s);
   }
+
+  form[action="/publish/note"] {
+    padding: var(--space-s-m);
+    border-radius: 0.5em;
+    background-color: var(--surface-2);
+    width: 100%;
+    max-width: 50ch;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
 }

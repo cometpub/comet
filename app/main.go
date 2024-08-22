@@ -37,10 +37,10 @@ func resolveIndex(c echo.Context) error {
 }
 
 func InitAppRoutes(e *core.ServeEvent, app core.App) {
-	e.Router.Use(echoMiddleware.Logger())
+	e.Router.Use(echoMiddleware.Logger(), middleware.LoadAuthContextFromCookie(app))
 
 	// placeholder for the admin dashboard app
-	appGroup := e.Router.Group("/app", middleware.LoadAuthContextFromCookie(app), middleware.RequireUserAuth)
+	appGroup := e.Router.Group("/app", middleware.RequireUserAuth)
 	appGroup.GET("", ToDo)
 
 	// distinguish between root requests for the Comet home page and publications redirected from the reverse proxy
@@ -51,4 +51,10 @@ func InitAppRoutes(e *core.ServeEvent, app core.App) {
 
 	entryGroup := e.Router.Group("/posts")
 	RegisterEntryRoutes(app, entryGroup)
+
+	profileGroup := feedGroup.Group("")
+	RegisterProfileRoutes(app, profileGroup)
+
+	publishGroup := feedGroup.Group("/publish")
+	RegisterPublishRoutes(app, publishGroup)
 }

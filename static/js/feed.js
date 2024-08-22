@@ -340,10 +340,3 @@ var ThemeToggle = class extends HTMLElement {
   }
 };
 customElements.define("theme-toggle", ThemeToggle);
-
-// src/js/utils/ff-xslt-fix.js
-document.querySelectorAll(".p-content, .p-summary").forEach(function(elem) {
-  if (elem.firstChild?.nodeName == "#text") {
-    elem.innerHTML = elem.innerText;
-  }
-});

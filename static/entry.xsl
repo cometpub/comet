@@ -117,13 +117,13 @@
                     
                     /* src/css/base/prose.css */
                     @layer base.prose {
-                      :where(.p-summary, .p-content) > * + * {
+                      :where(.p-summary, .p-content, .ProseMirror) > * + * {
                         margin-block-start: var(--space-s);
                       }
-                      :where(.p-summary, .p-content) :where(h2, h3, h4, h5, h6) {
+                      :where(.p-summary, .p-content, .ProseMirror) :where(h2, h3, h4, h5, h6) {
                         margin: calc(1rem + 0.75em) 0 calc(0.5rem + 0.15em);
                       }
-                      :where(.p-summary, .p-content) ul {
+                      :where(.p-summary, .p-content, .ProseMirror) ul {
                         padding-inline-start: 0;
                       }
                     }
@@ -569,6 +569,17 @@
                         flex-direction: column;
                         gap: var(--space-s);
                       }
+                      form[action="/publish/note"] {
+                        padding: var(--space-s-m);
+                        border-radius: 0.5em;
+                        background-color: var(--surface-2);
+                        width: 100%;
+                        max-width: 50ch;
+                        margin-inline: auto;
+                        display: flex;
+                        flex-direction: column;
+                        gap: var(--space-s);
+                      }
                     }
                 </style>
                 <script src="/static/js/feed.js"></script>
@@ -606,6 +617,14 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </main>
+                <script>
+                    // https://bugzilla.mozilla.org/show_bug.cgi?id=98168
+                    document.querySelectorAll(".p-content, .p-summary").forEach(function (elem) {
+                        if (elem.firstChild?.nodeName == "#text") {
+                            elem.innerHTML = elem.innerText;
+                        }
+                    });
+                </script>
             </body>
         </html>
     </xsl:template>

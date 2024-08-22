@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbase/pocketbase/models"
 )
 
 const HostHeader = "X-Forwarded-Host"
@@ -62,6 +63,24 @@ func RequirePublication(app core.App) echo.MiddlewareFunc {
 			}
 
 			return next(c)
+		}
+	}
+}
+
+func RequirePublicationAuthor(app core.App) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			userRecord := c.Get(apis.ContextAuthRecordKey).(*models.Record)
+			record := c.Get(ContextPublication).(*models.Record)
+			authors := record.ExpandedAll("authors")
+
+			for _, author := range authors {
+				if author.Id == userRecord.Id {
+					return next(c)
+				}
+			}
+
+			return apis.NewUnauthorizedError("The request can be accessed only by guests.", nil)
 		}
 	}
 }
