@@ -139,7 +139,7 @@
     --text-alt: var(--neutral-50);
     --color-bg: var(--neutral-50);
     --color-fg: var(--neutral-1100);
-    --color-link: var(--primary-900);
+    --color-link: var(--text-accent);
     --font-serif:
       Rockwell,
       "Rockwell Nova",
@@ -261,6 +261,10 @@
   pre,
   locale-date {
     font-family: var(--font-mono);
+  }
+  locale-date {
+    white-space: nowrap;
+    font-size: var(--font-size-s);
   }
   :is(a, a:visited) {
     color: var(--color-link);

@@ -167,7 +167,7 @@
                         --text-alt: var(--neutral-50);
                         --color-bg: var(--neutral-50);
                         --color-fg: var(--neutral-1100);
-                        --color-link: var(--primary-900);
+                        --color-link: var(--text-accent);
                         --font-serif:
                           Rockwell,
                           "Rockwell Nova",
@@ -289,6 +289,10 @@
                       pre,
                       locale-date {
                         font-family: var(--font-mono);
+                      }
+                      locale-date {
+                        white-space: nowrap;
+                        font-size: var(--font-size-s);
                       }
                       :is(a, a:visited) {
                         color: var(--color-link);
@@ -567,7 +571,7 @@
                       }
                     }
                 </style>
-                <script src="/static/js/feed.js" type="module"></script>
+                <script src="/static/js/feed.js"></script>
             </head>
             <body>
                 <xsl:apply-templates select="atom:feed" />
@@ -591,14 +595,6 @@
                             </nav>
                         </footer>
                     </xsl:if>
-                    <script>
-                        // https://bugzilla.mozilla.org/show_bug.cgi?id=98168
-                        document.querySelectorAll(".p-content, .p-summary").forEach(function (elem) {
-                            if (elem.firstChild?.nodeName == "#text") {
-                                elem.innerHTML = elem.innerText;
-                            }
-                        });
-                    </script>
                 </main>
             </body>
         </html>
