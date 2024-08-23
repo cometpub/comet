@@ -43,6 +43,7 @@ func LoadPublicationEntriesFromRequest(app core.App) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			publication := c.Get(ContextPublication).(*models.Record)
+			hostBase := c.Get(ContextHostBase).(string)
 			category := c.PathParam("category")
 			typeParam := c.PathParam("type")
 			currentPage, _ := intOrDefault(c.PathParam("page"), 1)
@@ -99,7 +100,7 @@ func LoadPublicationEntriesFromRequest(app core.App) echo.MiddlewareFunc {
 				TotalPages: int(math.Ceil(float64(entriesCount) / feeds.PAGE_SIZE)),
 			}
 
-			baseUrl, _ := url.JoinPath(publication.GetString("domain"), c.Request().URL.String())
+			baseUrl, _ := url.JoinPath(hostBase, c.Request().URL.Path)
 
 			pagination := page.FeedPagination(baseUrl)
 

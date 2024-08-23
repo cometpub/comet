@@ -9,3 +9,8 @@
 :where(.p-summary, .p-content) ul {
   padding-inline-start: 0;
 }
+
+pre:has(code) {
+  padding: var(--space-2xs);
+  overflow-inline: auto;
+}

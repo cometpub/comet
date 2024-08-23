@@ -126,6 +126,10 @@
                       :where(.p-summary, .p-content) ul {
                         padding-inline-start: 0;
                       }
+                      pre:has(code) {
+                        padding: var(--space-2xs);
+                        overflow-inline: auto;
+                      }
                     }
                     
                     /* src/css/base/theme.css */
@@ -235,7 +239,7 @@
                         padding: var(--space-xs-m);
                       }
                       main {
-                        margin-block: var(--space-m-l);
+                        padding-block: var(--space-m-l);
                         display: flex;
                         flex-direction: column;
                         gap: var(--space-m-l);

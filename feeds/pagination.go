@@ -3,7 +3,7 @@ package feeds
 import (
 	"fmt"
 	"net/url"
-	"path"
+	"regexp"
 )
 
 const PAGE_SIZE = 20
@@ -33,7 +33,9 @@ func (data *PaginationData) FeedPagination(self string) *FeedPagination {
 	baseUrl := self
 
 	if data.Page != 1 {
-		baseUrl = path.Dir(baseUrl)
+		// remove the page URL fragment from the path, accounting for an optional trailing slash
+		re := regexp.MustCompile(`\/[^\/]+(\/?)$`)
+		baseUrl = re.ReplaceAllString(baseUrl, "")
 	}
 
 	if data.TotalPages == 1 {

@@ -79,7 +79,7 @@ shareButtonTmpl.innerHTML = `
     <p aria-hidden="true">Copied!</p>
 </button>
 `;
-var ShareButton = class extends HTMLElement {
+var ShareButton = class _ShareButton extends HTMLElement {
   static WebShareSupported = navigator != null && typeof navigator.share == "function";
   /**
    * @type {HTMLButtonElement}
@@ -104,7 +104,7 @@ var ShareButton = class extends HTMLElement {
   connectedCallback() {
     this.#buttonElem = this.shadowRoot.querySelector("button");
     this.#tooltipElem = this.shadowRoot.querySelector("p");
-    this.#buttonElem.onclick = this.WebShareSupported ? () => this.share() : () => this.copyToClipboard();
+    this.#buttonElem.onclick = _ShareButton.WebShareSupported ? () => this.share() : () => this.copyToClipboard();
   }
   get title() {
     return this.getAttribute("title");
