@@ -74,7 +74,7 @@ class ShareButton extends HTMLElement {
     this.#buttonElem = this.shadowRoot.querySelector("button");
     this.#tooltipElem = this.shadowRoot.querySelector("p");
 
-    this.#buttonElem.onclick = this.WebShareSupported
+    this.#buttonElem.onclick = ShareButton.WebShareSupported
       ? () => this.share()
       : () => this.copyToClipboard();
   }
