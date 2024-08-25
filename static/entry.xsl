@@ -598,7 +598,7 @@
                                 </header>
                                 <hr/>
                                 <blockquote class="p-summary">
-                                    <xsl:value-of select="$entry/atom:summary"/>
+                                    <xsl:value-of select="$entry/atom:summary" disable-output-escaping="yes"/>
                                 </blockquote>
                                 <div class="p-content">
                                     <xsl:apply-templates select="$entry/atom:content"/>
