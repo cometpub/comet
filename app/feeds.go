@@ -4,8 +4,10 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/cometpub/comet/feeds"
+	"github.com/cometpub/comet/lib"
 	"github.com/cometpub/comet/middleware"
 	"github.com/cometpub/comet/publications"
 	"github.com/labstack/echo/v5"
@@ -19,6 +21,7 @@ func RegisterFeedRoutes(app core.App, group *echo.Group) {
 		middleware.LoadPublicationFromRequest(app),
 		middleware.RequirePublication(app),
 		middleware.LoadPublicationEntriesFromRequest(app),
+		middleware.LoadCrawlersForRequest,
 	)
 
 	// main routes for Atom feeds
@@ -65,6 +68,11 @@ func FeedGetByAccepts(c echo.Context) error {
 }
 
 func AtomFeedGet(c echo.Context) error {
+	isCrawler := c.Get(middleware.ContextIsCrawler).(bool)
+	if isCrawler {
+		return CrawlerFeedGet(c)
+	}
+
 	publication := c.Get(middleware.ContextPublication).(*models.Record)
 	entries := c.Get(middleware.ContextEntries).([]*models.Record)
 	pagination := c.Get(middleware.ContextPagination).(*feeds.FeedPagination)
@@ -76,6 +84,11 @@ func AtomFeedGet(c echo.Context) error {
 }
 
 func JsonFeedGet(c echo.Context) error {
+	isCrawler := c.Get(middleware.ContextIsCrawler).(bool)
+	if isCrawler {
+		return CrawlerFeedGet(c)
+	}
+
 	publication := c.Get(middleware.ContextPublication).(*models.Record)
 	entries := c.Get(middleware.ContextEntries).([]*models.Record)
 	pagination := c.Get(middleware.ContextPagination).(*feeds.FeedPagination)
@@ -92,6 +105,11 @@ func JsonFeedGet(c echo.Context) error {
 }
 
 func RSSFeedGet(c echo.Context) error {
+	isCrawler := c.Get(middleware.ContextIsCrawler).(bool)
+	if isCrawler {
+		return CrawlerFeedGet(c)
+	}
+
 	publication := c.Get(middleware.ContextPublication).(*models.Record)
 	entries := c.Get(middleware.ContextEntries).([]*models.Record)
 	pagination := c.Get(middleware.ContextPagination).(*feeds.FeedPagination)
@@ -105,4 +123,23 @@ func RSSFeedGet(c echo.Context) error {
 	c.Response().WriteHeader(http.StatusOK)
 
 	return c.String(http.StatusOK, rssFeed)
+}
+
+func CrawlerFeedGet(c echo.Context) error {
+	publication := c.Get(middleware.ContextPublication).(*models.Record)
+	hostBase := c.Get(middleware.ContextHostBase).(string)
+
+	seo := &feeds.SEO{
+		Title:       publication.GetString("title"),
+		Description: publication.GetString("subtitle"),
+		Image:       publications.RecordPropToImageSrc(hostBase, publication, "logo"),
+		Url:         publication.GetString("domain"),
+	}
+
+	forceUrl, _ := url.Parse(hostBase + c.Request().URL.String())
+	query := forceUrl.Query()
+	query.Add("force", "true")
+	forceUrl.RawQuery = query.Encode()
+
+	return lib.Render(c, http.StatusOK, feeds.CrawlerFeed(seo, forceUrl.String()))
 }

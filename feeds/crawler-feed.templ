@@ -1,0 +1,42 @@
+package feeds
+
+type SEO struct {
+    Title string
+    Site string
+    Description string
+    Image string
+    Url string
+}
+
+templ CrawlerFeed(seo *SEO, humanUrl string) {
+    <html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width"/>
+			<title>{seo.Title}</title>
+			<meta name="description" content={ seo.Description }/>
+
+            <!-- Open Graph -->
+            <meta property="og:title" content={seo.Title} />
+            <meta property="og:site_name" content={seo.Site} />
+            <meta property="og:type" content="website" />
+            <meta property="og:description" content={seo.Description } />
+            <meta property="og:image" content={seo.Image} />
+            <meta property="og:url" content={seo.Url} />
+            <meta property="og:locale" content="en_US" />
+
+            <!-- Twitter -->
+            <meta name="twitter:title" content={seo.Title} />
+            <meta name="twitter:description" content={seo.Description} />
+            <meta name="twitter:image" content={seo.Image} />
+            <meta name="twitter:url" content={seo.Url} />
+
+		</head>
+		<body>
+			<main>
+                <p>You look like a bot</p>
+                <p>If you're actually human, <a href={templ.SafeURL(humanUrl)}>click here</a></p>
+			</main>
+		</body>
+	</html>
+}
