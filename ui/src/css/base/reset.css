@@ -63,7 +63,7 @@ h6 {
 
 hr {
   border-color: var(--surface-3);
-  margin-block: var(--space-m-l);
+  margin-block: var(--space-xl-2xl);
 }
 
 fieldset {

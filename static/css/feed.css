@@ -100,7 +100,14 @@
   }
   pre:has(code) {
     padding: var(--space-2xs);
+    overflow-x: auto;
     overflow-inline: auto;
+  }
+  :not(pre) > code {
+    background-color: var(--surface-3);
+    padding: var(--space-3xs);
+    border-radius: 0.25em;
+    display: inline-block;
   }
 }
 
