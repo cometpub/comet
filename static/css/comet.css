@@ -175,6 +175,7 @@
     --space-l-xl: clamp(2rem, 1.5217rem + 2.3913vw, 3.375rem);
     --space-xl-2xl: clamp(3rem, 2.4783rem + 2.6087vw, 4.5rem);
     --space-2xl-3xl: clamp(4rem, 3.0435rem + 4.7826vw, 6.75rem);
+    --space-xs-m: clamp(0.75rem, 0.4239rem + 1.6304vw, 1.6875rem);
     --space-s-l: clamp(1rem, 0.5652rem + 2.1739vw, 2.25rem);
   }
   [data-theme=dark] {
