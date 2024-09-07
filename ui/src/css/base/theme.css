@@ -58,7 +58,7 @@
   --font-size-3xl: clamp(2.0736rem, 1.8395rem + 1.1704vi, 2.7466rem);
   --font-size-4xl: clamp(2.4883rem, 2.1597rem + 1.6433vi, 3.4332rem);
 
-  /* @link https://utopia.fyi/space/calculator?c=320,16,1.2,1240,18,1.25,5,1,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+  /* @link https://utopia.fyi/space/calculator/?c=320,16,1.2,1240,18,1.25,5,1,&s=0.75|0.5|0.25,1.5|2|3|4|6,xs-m|s-l&g=s,l,xl,12 */
   --space-3xs: clamp(0.25rem, 0.2283rem + 0.1087vw, 0.3125rem);
   --space-2xs: clamp(0.5rem, 0.4783rem + 0.1087vw, 0.5625rem);
   --space-xs: clamp(0.75rem, 0.7065rem + 0.2174vw, 0.875rem);
@@ -80,6 +80,7 @@
   --space-2xl-3xl: clamp(4rem, 3.0435rem + 4.7826vw, 6.75rem);
 
   /* Custom pairs */
+  --space-xs-m: clamp(0.75rem, 0.4239rem + 1.6304vw, 1.6875rem);
   --space-s-l: clamp(1rem, 0.5652rem + 2.1739vw, 2.25rem);
 }
 
