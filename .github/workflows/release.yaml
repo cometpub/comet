@@ -36,8 +36,8 @@ jobs:
       - name: Build Comet UI
         run: npm --prefix=./ui ci && npm --prefix=./ui run build
 
-      - name: Build Templ files
-        uses: capthiron/templ-generator-action@v1
+      # - name: Build Templ files
+      #   uses: capthiron/templ-generator-action@v1
 
       - name: Run tests
         run: go test ./...
