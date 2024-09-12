@@ -51,4 +51,7 @@ func InitAppRoutes(e *core.ServeEvent, app core.App) {
 
 	entryGroup := e.Router.Group("/posts")
 	RegisterEntryRoutes(app, entryGroup)
+
+	activityPubGroup := e.Router.Group("")
+	RegisterActivityPubRoutes(app, activityPubGroup)
 }
