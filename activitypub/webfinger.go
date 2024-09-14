@@ -8,9 +8,10 @@ import (
 )
 
 type WebfingerLink struct {
-	Rel  string `json:"rel"`
-	Type string `json:"type"`
-	Href string `json:"href"`
+	Rel      string `json:"rel"`
+	Type     string `json:"type,omitempty"`
+	Href     string `json:"href,omitempty"`
+	Template string `json:"template,omitempty"`
 }
 
 type Webfinger struct {
@@ -25,18 +26,23 @@ func PublicationAuthorToWebfinger(publication *models.Record, author *models.Rec
 	return &Webfinger{
 		Account: fmt.Sprintf("acct:%s@%s", author.Username(), domain.Host),
 		Aliases: []string{
-			fmt.Sprintf("https://%s.comet.pub/activitypub/users/%s", publication.GetString("slug"), author.Username()),
+			domain.JoinPath(fmt.Sprintf("@%s", author.Username())).String(),
+			domain.JoinPath("users", author.Username()).String(),
 		},
 		Links: []WebfingerLink{
 			{
 				Rel:  "http://webfinger.net/rel/profile-page",
 				Type: "text/html",
-				Href: domain.String(),
+				Href: domain.JoinPath("feed").String(),
 			},
 			{
 				Rel:  "self",
 				Type: "application/activity+json",
-				Href: domain.String(),
+				Href: domain.JoinPath("feed").String(),
+			},
+			{
+				Rel:      "http://ostatus.org/schema/1.0/subscribe",
+				Template: domain.JoinPath("authorize_interaction").String() + "?uri={uri}",
 			},
 		},
 	}
