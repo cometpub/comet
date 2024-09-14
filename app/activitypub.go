@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -13,6 +14,20 @@ import (
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/models"
 )
+
+func SendActivityPubJson(app core.App, c echo.Context, v any) error {
+	data, err := json.Marshal(v)
+
+	if err != nil {
+		app.Logger().Error("Error sending ActivityPub json", "error", err)
+	}
+
+	c.Response().Header().Set(echo.HeaderContentType, "application/activity+json")
+	c.Response().WriteHeader(http.StatusOK)
+	c.Response().Writer.Write(data)
+
+	return nil
+}
 
 func RegisterActivityPubRoutes(app core.App, group *echo.Group) {
 	group.Use(
@@ -51,6 +66,6 @@ func WebfingerGet(app core.App) echo.HandlerFunc {
 
 		webfinger := activitypub.PublicationAuthorToWebfinger(publication, author)
 
-		return c.JSON(http.StatusOK, webfinger)
+		return SendActivityPubJson(app, c, webfinger)
 	}
 }
