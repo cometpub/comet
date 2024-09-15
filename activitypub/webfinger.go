@@ -20,8 +20,8 @@ type Webfinger struct {
 	Links   []WebfingerLink `json:"links"`
 }
 
-func PublicationAuthorToWebfinger(publication *models.Record, author *models.Record) *Webfinger {
-	domain, _ := url.Parse(publication.GetString("domain"))
+func PublicationAuthorToWebfinger(hostBase string, author *models.Record) *Webfinger {
+	domain, _ := url.Parse(hostBase)
 
 	return &Webfinger{
 		Account: fmt.Sprintf("acct:%s@%s", author.Username(), domain.Host),
@@ -37,11 +37,11 @@ func PublicationAuthorToWebfinger(publication *models.Record, author *models.Rec
 			{
 				Rel:  "self",
 				Type: "application/activity+json",
-				Href: domain.JoinPath("authors", author.Username()).String(),
+				Href: domain.JoinPath("activitypub", "authors", author.Username()).String(),
 			},
 			{
 				Rel:      "http://ostatus.org/schema/1.0/subscribe",
-				Template: domain.JoinPath("authorize_interaction").String() + "?uri={uri}",
+				Template: domain.JoinPath("activitypub", "authorize_interaction").String() + "?uri={uri}",
 			},
 		},
 	}

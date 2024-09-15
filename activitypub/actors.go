@@ -27,6 +27,7 @@ func AuthorToActor(hostBase string, publication *models.Record, author *models.R
 
 	actor.Inbox = ap.IRI(domain.JoinPath("activitypub", "inbox", slug).String())
 	actor.Followers = ap.IRI(domain.JoinPath("activitypub", "followers", slug).String())
+	actor.Outbox = ap.IRI(domain.JoinPath("activitypub", "outbox", slug).String())
 
 	LoadActivityPubPrivateKey(publication, author)
 	pubKeyBytes := GetPublicKey(publication, author)
