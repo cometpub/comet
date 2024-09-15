@@ -14,7 +14,7 @@ import (
 
 func AuthorToActor(hostBase string, publication *models.Record, author *models.Record) *ap.Person {
 	domain, _ := url.Parse(hostBase)
-	slug := publication.GetString("slug")
+	slug := author.Username()
 
 	iri := ap.IRI(domain.JoinPath("activitypub", "authors", slug).String())
 
