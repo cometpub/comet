@@ -120,6 +120,7 @@ func OutboxGet(app core.App) echo.HandlerFunc {
 		hostBase := c.Get(middleware.ContextHostBase).(string)
 		author := c.Get(middleware.ContextActivityPubAuthor).(*models.Record)
 		publication := c.Get(middleware.ContextPublication).(*models.Record)
+		actor := activitypub.AuthorToActor(hostBase, publication, author)
 
 		// TODO load followers from DB
 
@@ -139,10 +140,12 @@ func OutboxGet(app core.App) echo.HandlerFunc {
 
 		for _, record := range notes {
 			note := ap.Note{
-				ID:        ap.IRI(domain.JoinPath("notes", record.GetString("slug")).String()),
-				Type:      ap.NoteType,
-				Published: record.GetDateTime("published").Time(),
-				Content:   ap.NaturalLanguageValuesNew(ap.LangRefValueNew(ap.DefaultLang, lib.MarkdownToHTML(record.GetString("summary")))),
+				ID:           ap.IRI(domain.JoinPath("posts", record.GetString("slug")).String()),
+				Type:         ap.NoteType,
+				URL:          ap.IRI(domain.JoinPath("posts", record.GetString("slug")).String()),
+				AttributedTo: actor.ID,
+				Published:    record.GetDateTime("published").Time(),
+				Content:      ap.NaturalLanguageValuesNew(ap.LangRefValueNew(ap.DefaultLang, lib.MarkdownToHTML(record.GetString("summary")))),
 				To: ap.ItemCollection{
 					ap.PublicNS,
 				},
