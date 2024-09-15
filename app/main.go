@@ -26,6 +26,10 @@ func TemporaryRedirect(to string) echo.HandlerFunc {
 	}
 }
 
+func NotImplemented(c echo.Context) error {
+	return apis.NewApiError(http.StatusNotImplemented, "not implemented", nil)
+}
+
 func resolveIndex(c echo.Context) error {
 	publication := c.Get(middleware.ContextPublication)
 

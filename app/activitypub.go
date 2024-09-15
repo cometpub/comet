@@ -2,12 +2,12 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"regexp"
 
 	"github.com/cometpub/comet/activitypub"
-	"github.com/cometpub/comet/lib"
 	"github.com/cometpub/comet/middleware"
 	"github.com/cometpub/comet/publications"
 	ap "github.com/go-ap/activitypub"
@@ -41,10 +41,50 @@ func RegisterActivityPubRoutes(app core.App, group *echo.Group) {
 		middleware.RequirePublication(app),
 	)
 
+	group.GET("/.well-known/host-meta", WellKnownMetaGet(app))
+	group.GET("/.well-known/nodeinfo", WellKnownNodeInfoGet)
+	group.GET("/nodeinfo", ServerInfoGet(app))
 	group.GET("/.well-known/webfinger", WebfingerGet(app))
 	group.GET("/activitypub/authors/:username", ActorGet(app), middleware.LoadActivityPubAuthorForRequest(app))
 	group.GET("/activitypub/followers/:username", FollowersGet(app), middleware.LoadActivityPubAuthorForRequest(app))
-	group.GET("/activitypub/outbox/:username", OutboxGet(app), middleware.LoadActivityPubAuthorForRequest(app))
+	group.GET("/activitypub/outbox/:username", NotImplemented, middleware.LoadActivityPubAuthorForRequest(app))
+}
+
+func WellKnownMetaGet(app core.App) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		hostBase := c.Get(middleware.ContextHostBase).(string)
+
+		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationXMLCharsetUTF8)
+		c.Response().WriteHeader(http.StatusOK)
+
+		c.Response().Write([]byte(fmt.Sprintf(`<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0"><Link rel="lrdd" type="application/xrd+xml" template="%s/.well-known/webfinger?resource={uri}"/></XRD>`, hostBase)))
+
+		return nil
+	}
+}
+
+func WellKnownNodeInfoGet(c echo.Context) error {
+	hostBase := c.Get(middleware.ContextHostBase).(string)
+	domain, _ := url.Parse(hostBase)
+
+	info := map[string][]activitypub.WebfingerLink{
+		"links": {
+			{
+				Href: domain.JoinPath("nodeinfo").String(),
+				Rel:  "http://nodeinfo.diaspora.software/ns/schema/2.1",
+			},
+		},
+	}
+
+	return c.JSON(http.StatusOK, info)
+}
+
+func ServerInfoGet(app core.App) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		nodeInfo := activitypub.GetServerInfo(app)
+
+		return c.JSON(http.StatusOK, nodeInfo)
+	}
 }
 
 func WebfingerGet(app core.App) echo.HandlerFunc {
@@ -110,51 +150,6 @@ func FollowersGet(app core.App) echo.HandlerFunc {
 
 		collection := ap.CollectionNew(ap.IRI(domain.JoinPath("activitypub", "followers", author.Username()).String()))
 		collection.TotalItems = 0
-
-		return SendActivityPubJson(app, c, collection)
-	}
-}
-
-func OutboxGet(app core.App) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		hostBase := c.Get(middleware.ContextHostBase).(string)
-		author := c.Get(middleware.ContextActivityPubAuthor).(*models.Record)
-		publication := c.Get(middleware.ContextPublication).(*models.Record)
-		actor := activitypub.AuthorToActor(hostBase, publication, author)
-
-		// TODO load followers from DB
-
-		domain, _ := url.Parse(hostBase)
-
-		// TODO support pagination via OrderedCollectionPage
-		collection := ap.OrderedCollectionNew(ap.IRI(domain.JoinPath("activitypub", "outbox", author.Username()).String()))
-
-		notes, _ := publications.FindEntriesForPublication(
-			app,
-			publication.Id,
-			"",
-			publications.NoteType,
-			100,
-			0,
-		)
-
-		for _, record := range notes {
-			note := ap.Note{
-				ID:           ap.IRI(domain.JoinPath("posts", record.GetString("slug")).String()),
-				Type:         ap.NoteType,
-				URL:          ap.IRI(domain.JoinPath("posts", record.GetString("slug")).String()),
-				AttributedTo: actor.ID,
-				Published:    record.GetDateTime("published").Time(),
-				Content:      ap.NaturalLanguageValuesNew(ap.LangRefValueNew(ap.DefaultLang, lib.MarkdownToHTML(record.GetString("summary")))),
-				To: ap.ItemCollection{
-					ap.PublicNS,
-				},
-			}
-
-			collection.OrderedItems.Append(note)
-		}
-
-		collection.TotalItems = uint(len(notes))
 
 		return SendActivityPubJson(app, c, collection)
 	}
