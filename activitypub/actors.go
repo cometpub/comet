@@ -16,7 +16,7 @@ func AuthorToActor(hostBase string, publication *models.Record, author *models.R
 	domain, _ := url.Parse(hostBase)
 	slug := publication.GetString("slug")
 
-	iri := ap.IRI(domain.JoinPath("authors", slug).String())
+	iri := ap.IRI(domain.JoinPath("activitypub", "authors", slug).String())
 
 	actor := ap.PersonNew(iri)
 	actor.URL = iri
