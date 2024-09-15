@@ -1,7 +1,6 @@
 package app
 
 import (
-	"encoding/json"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -9,6 +8,8 @@ import (
 	"github.com/cometpub/comet/activitypub"
 	"github.com/cometpub/comet/middleware"
 	"github.com/cometpub/comet/publications"
+	ap "github.com/go-ap/activitypub"
+	"github.com/go-ap/jsonld"
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
@@ -16,15 +17,16 @@ import (
 )
 
 func SendActivityPubJson(app core.App, c echo.Context, v any) error {
-	data, err := json.Marshal(v)
+	payload, err := jsonld.WithContext(jsonld.IRI(ap.ActivityBaseURI), jsonld.IRI(ap.SecurityContextURI)).Marshal(v)
 
 	if err != nil {
-		app.Logger().Error("Error sending ActivityPub json", "error", err)
+		app.Logger().Error("Error encoding ActivityPub json", "error", err)
+		return apis.NewApiError(http.StatusInternalServerError, "error encoding ActivityPub JSON", nil)
 	}
 
 	c.Response().Header().Set(echo.HeaderContentType, "application/activity+json")
 	c.Response().WriteHeader(http.StatusOK)
-	c.Response().Writer.Write(data)
+	c.Response().Writer.Write(payload)
 
 	return nil
 }

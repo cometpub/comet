@@ -15,7 +15,7 @@ func AuthorToActor(hostBase string, publication *models.Record, author *models.R
 	domain, _ := url.Parse(hostBase)
 	slug := publication.GetString("slug")
 
-	iri := ap.IRI(domain.String())
+	iri := ap.IRI(domain.JoinPath("authors", slug).String())
 
 	actor := ap.PersonNew(iri)
 	actor.URL = iri
@@ -26,9 +26,6 @@ func AuthorToActor(hostBase string, publication *models.Record, author *models.R
 
 	actor.Inbox = ap.IRI(domain.JoinPath("activitypub", "inbox", slug).String())
 	actor.Followers = ap.IRI(domain.JoinPath("activitypub", "followers", slug).String())
-
-	actor.PublicKey.Owner = iri
-	actor.PublicKey.ID = ap.IRI(domain.String() + "#main-key")
 
 	if avatar := publications.RecordPropToImageSrc(hostBase, author, "avatar"); avatar != "" {
 		icon := &ap.Image{}
