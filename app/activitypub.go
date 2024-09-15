@@ -42,6 +42,7 @@ func RegisterActivityPubRoutes(app core.App, group *echo.Group) {
 
 	group.GET("/.well-known/webfinger", WebfingerGet(app))
 	group.GET("/authors/:username", ActorGet(app))
+	group.GET("/activitypub/followers/:username", FollowersGet(app))
 }
 
 func WebfingerGet(app core.App) echo.HandlerFunc {
@@ -97,5 +98,21 @@ func ActorGet(app core.App) echo.HandlerFunc {
 		actor := activitypub.AuthorToActor(hostBase, publication, author)
 
 		return SendActivityPubJson(app, c, actor)
+	}
+}
+
+func FollowersGet(app core.App) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		hostBase := c.Get(middleware.ContextHostBase).(string)
+		username := c.PathParam("username")
+
+		// TODO load followers from DB
+
+		domain, _ := url.Parse(hostBase)
+
+		collection := ap.CollectionNew(ap.IRI(domain.JoinPath("activitypub", "followers", username).String()))
+		collection.TotalItems = 0
+
+		return SendActivityPubJson(app, c, collection)
 	}
 }
