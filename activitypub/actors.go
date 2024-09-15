@@ -1,6 +1,7 @@
 package activitypub
 
 import (
+	"encoding/pem"
 	"mime"
 	"net/url"
 	"path/filepath"
@@ -26,6 +27,17 @@ func AuthorToActor(hostBase string, publication *models.Record, author *models.R
 
 	actor.Inbox = ap.IRI(domain.JoinPath("activitypub", "inbox", slug).String())
 	actor.Followers = ap.IRI(domain.JoinPath("activitypub", "followers", slug).String())
+
+	LoadActivityPubPrivateKey(publication, author)
+	pubKeyBytes := GetPublicKey(publication, author)
+
+	actor.PublicKey.Owner = iri
+	actor.PublicKey.ID = ap.IRI(iri + "#main-key")
+	actor.PublicKey.PublicKeyPem = string(pem.EncodeToMemory(&pem.Block{
+		Type:    "PUBLIC KEY",
+		Headers: nil,
+		Bytes:   pubKeyBytes,
+	}))
 
 	if avatar := publications.RecordPropToImageSrc(hostBase, author, "avatar"); avatar != "" {
 		icon := &ap.Image{}

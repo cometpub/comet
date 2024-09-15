@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -32,6 +33,8 @@ func SendActivityPubJson(app core.App, c echo.Context, v any) error {
 }
 
 func RegisterActivityPubRoutes(app core.App, group *echo.Group) {
+	activitypub.InitKeyStore(app)
+
 	group.Use(
 		middleware.LoadPublicationFromRequest(app),
 		middleware.RequirePublication(app),
@@ -69,7 +72,13 @@ func WebfingerGet(app core.App) echo.HandlerFunc {
 
 		webfinger := activitypub.PublicationAuthorToWebfinger(publication, author)
 
-		return SendActivityPubJson(app, c, webfinger)
+		payload, _ := json.Marshal(webfinger)
+
+		c.Response().Header().Set(echo.HeaderContentType, "application/jrd+json; charset=utf-8")
+		c.Response().WriteHeader(http.StatusOK)
+		c.Response().Writer.Write(payload)
+
+		return nil
 	}
 }
 
