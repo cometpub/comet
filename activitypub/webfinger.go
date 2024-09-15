@@ -26,7 +26,7 @@ func PublicationAuthorToWebfinger(hostBase string, author *models.Record) *Webfi
 	return &Webfinger{
 		Account: fmt.Sprintf("acct:%s@%s", author.Username(), domain.Host),
 		Aliases: []string{
-			domain.JoinPath("authors", author.Username()).String(),
+			domain.JoinPath("activitypub", "authors", author.Username()).String(),
 		},
 		Links: []WebfingerLink{
 			{
