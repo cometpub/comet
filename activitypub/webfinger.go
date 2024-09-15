@@ -26,8 +26,7 @@ func PublicationAuthorToWebfinger(publication *models.Record, author *models.Rec
 	return &Webfinger{
 		Account: fmt.Sprintf("acct:%s@%s", author.Username(), domain.Host),
 		Aliases: []string{
-			domain.JoinPath(fmt.Sprintf("@%s", author.Username())).String(),
-			domain.JoinPath("users", author.Username()).String(),
+			domain.JoinPath("authors", author.Username()).String(),
 		},
 		Links: []WebfingerLink{
 			{
@@ -38,7 +37,7 @@ func PublicationAuthorToWebfinger(publication *models.Record, author *models.Rec
 			{
 				Rel:  "self",
 				Type: "application/activity+json",
-				Href: domain.JoinPath("feed").String(),
+				Href: domain.JoinPath("authors", author.Username()).String(),
 			},
 			{
 				Rel:      "http://ostatus.org/schema/1.0/subscribe",

@@ -36,6 +36,7 @@ func RegisterActivityPubRoutes(app core.App, group *echo.Group) {
 	)
 
 	group.GET("/.well-known/webfinger", WebfingerGet(app))
+	group.GET("/authors/:username", ActorGet(app))
 }
 
 func WebfingerGet(app core.App) echo.HandlerFunc {
@@ -67,5 +68,23 @@ func WebfingerGet(app core.App) echo.HandlerFunc {
 		webfinger := activitypub.PublicationAuthorToWebfinger(publication, author)
 
 		return SendActivityPubJson(app, c, webfinger)
+	}
+}
+
+func ActorGet(app core.App) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		publication := c.Get(middleware.ContextPublication).(*models.Record)
+		username := c.PathParam("username")
+		hostBase := c.Get(middleware.ContextHostBase).(string)
+
+		author := publications.FindPublicationAuthor(app, publication, username)
+
+		if author == nil {
+			return apis.NewNotFoundError("resource not found", nil)
+		}
+
+		actor := activitypub.AuthorToActor(hostBase, publication, author)
+
+		return SendActivityPubJson(app, c, actor)
 	}
 }
